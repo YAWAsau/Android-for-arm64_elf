@@ -1,0 +1,7 @@
+out/
+out-r30/
+android-r30-direct/
+host-direct/
+__pycache__/
+*.pyc
+dist/

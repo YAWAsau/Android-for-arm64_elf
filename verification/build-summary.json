@@ -1,0 +1,217 @@
+{
+  "status": "passed",
+  "recorded_at_utc": "2026-09-26T14:45:22.278750+00:00",
+  "host": "Windows",
+  "shell": "Windows PowerShell 5.1",
+  "entry_point": "build.ps1",
+  "jobs": 8,
+  "exit_code": 0,
+  "cache_validation": "The first attempts used a new isolated work root. After correcting build-script failures, the complete outer build was rerun with that root and its newly built dependency cache.",
+  "ndk_revision": "30.0.16248370",
+  "target": "aarch64-linux-android28",
+  "binary_count": 9,
+  "binaries": [
+    {
+      "name": "zstd",
+      "component": "zstd",
+      "bytes": 1010920,
+      "sha256": "47d984b267efe90e223cd5338e37f661ad3ced6cae5daae62d887fa724408e81",
+      "machine": "AArch64",
+      "elf_type": "ET_EXEC",
+      "fully_static": true,
+      "load_alignments": [
+        16384,
+        16384,
+        16384
+      ],
+      "android_identification": {
+        "api": 28,
+        "ndk": "r30",
+        "ndk_build": "16248370"
+      }
+    },
+    {
+      "name": "tar",
+      "component": "tar",
+      "bytes": 1247024,
+      "sha256": "45f372224da44d0e2f18da92926ecf9018224337d7f5b046e4a5aacea5701073",
+      "machine": "AArch64",
+      "elf_type": "ET_EXEC",
+      "fully_static": true,
+      "load_alignments": [
+        16384,
+        16384,
+        16384
+      ],
+      "android_identification": {
+        "api": 28,
+        "ndk": "r30",
+        "ndk_build": "16248370"
+      }
+    },
+    {
+      "name": "busybox",
+      "component": "busybox",
+      "bytes": 932208,
+      "sha256": "51df9a8e1d8d2669c03eff48d3bf49e029c56903634e63acd2a7f539385d0867",
+      "machine": "AArch64",
+      "elf_type": "ET_EXEC",
+      "fully_static": true,
+      "load_alignments": [
+        16384,
+        16384,
+        16384
+      ],
+      "android_identification": {
+        "api": 28,
+        "ndk": "r30",
+        "ndk_build": "16248370"
+      }
+    },
+    {
+      "name": "smbclient",
+      "component": "samba",
+      "bytes": 7549864,
+      "sha256": "534efa4a802e3c5ac23048415db144742af2dcc3980a7edb76d15417d2a7ed69",
+      "machine": "AArch64",
+      "elf_type": "ET_EXEC",
+      "fully_static": true,
+      "load_alignments": [
+        16384,
+        16384,
+        16384
+      ],
+      "android_identification": {
+        "api": 28,
+        "ndk": "r30",
+        "ndk_build": "16248370"
+      }
+    },
+    {
+      "name": "smbd",
+      "component": "samba",
+      "bytes": 11151352,
+      "sha256": "f3776f82870ce6025bb7d94688e14b117681e27252cc466ca222869ddff86227",
+      "machine": "AArch64",
+      "elf_type": "ET_EXEC",
+      "fully_static": true,
+      "load_alignments": [
+        16384,
+        16384,
+        16384
+      ],
+      "android_identification": {
+        "api": 28,
+        "ndk": "r30",
+        "ndk_build": "16248370"
+      }
+    },
+    {
+      "name": "samba-dcerpcd",
+      "component": "samba",
+      "bytes": 5855080,
+      "sha256": "d67922a07b6c874757ec0b06f9f6789d92b2689bb55702048c5c8f86ebdf48a6",
+      "machine": "AArch64",
+      "elf_type": "ET_EXEC",
+      "fully_static": true,
+      "load_alignments": [
+        16384,
+        16384,
+        16384
+      ],
+      "android_identification": {
+        "api": 28,
+        "ndk": "r30",
+        "ndk_build": "16248370"
+      }
+    },
+    {
+      "name": "rpcd_classic",
+      "component": "samba",
+      "bytes": 13806336,
+      "sha256": "5261b6ae89ccb777d2a418412f6284f22e5148ce88b54729262626e7dea0d966",
+      "machine": "AArch64",
+      "elf_type": "ET_EXEC",
+      "fully_static": true,
+      "load_alignments": [
+        16384,
+        16384,
+        16384
+      ],
+      "android_identification": {
+        "api": 28,
+        "ndk": "r30",
+        "ndk_build": "16248370"
+      }
+    },
+    {
+      "name": "rpcd_lsad",
+      "component": "samba",
+      "bytes": 8810128,
+      "sha256": "bf37062b93d67216581562edadc57bca45a5a314be15008baa20e197bfe1460a",
+      "machine": "AArch64",
+      "elf_type": "ET_EXEC",
+      "fully_static": true,
+      "load_alignments": [
+        16384,
+        16384,
+        16384
+      ],
+      "android_identification": {
+        "api": 28,
+        "ndk": "r30",
+        "ndk_build": "16248370"
+      }
+    },
+    {
+      "name": "rpcd_winreg",
+      "component": "samba",
+      "bytes": 6983600,
+      "sha256": "2243c39c8e6a07a7d9819d9983f82070c9db3dc815e7458f19581b8f417542ea",
+      "machine": "AArch64",
+      "elf_type": "ET_EXEC",
+      "fully_static": true,
+      "load_alignments": [
+        16384,
+        16384,
+        16384
+      ],
+      "android_identification": {
+        "api": 28,
+        "ndk": "r30",
+        "ndk_build": "16248370"
+      }
+    }
+  ],
+  "versions": {
+    "zstd_commit": "01b7154f1172432f8abe9b3bb9909e14a1176b7d",
+    "tar": "1.35.90",
+    "busybox": "1.38.0",
+    "samba": "4.25.0"
+  },
+  "optimization": {
+    "zstd": "-O3 / Full LTO",
+    "tar": "-O2 / no LTO",
+    "busybox": "-Os / ThinLTO",
+    "samba": "-Os -fPIE -ffunction-sections -fdata-sections -flto=thin"
+  },
+  "busybox": {
+    "profile": "speedbackup-ziponly-unicode",
+    "applets": 68,
+    "llvm_bitcode_objects": 357,
+    "unicode": {
+      "implementation": "busybox-internal-utf8",
+      "max_code_point": 1114111,
+      "max_code_point_hex": "U+10FFFF",
+      "wide_chars": true,
+      "combining_chars": true,
+      "depends_on_locale_env": false,
+      "width_tables": "BusyBox 1.38.0 (unchanged)"
+    }
+  },
+  "device_checks": "Original Samba configure probes and final smbclient --version on the connected rooted ARM64 spare device.",
+  "limitations": [
+    "No complete backup, restore or SMB server functional suite was run for this combined build.",
+    "API28 identification is a private CRT metadata adjustment; Android 9 runtime compatibility remains unverified."
+  ]
+}

@@ -1,0 +1,1063 @@
+--- a/coreutils/install.c
++++ b/coreutils/install.c
+@@ -34,12 +34,14 @@
+ //usage:     "\n	-g GRP	Set group ownership"
+ //usage:     "\n	-m MODE	Set permissions"
+ //usage:     "\n	-t DIR	Install to DIR"
+-//usage:	IF_SELINUX(
+-//usage:     "\n	-Z	Set security context"
+-//usage:	)
+ 
+ #include "libbb.h"
+ #include "libcoreutils/coreutils.h"
++
++// Force disable SELinux features for this applet
++#undef ENABLE_SELINUX
++#undef IF_SELINUX
++#define IF_SELINUX(...)
+ 
+ #if ENABLE_FEATURE_INSTALL_LONG_OPTIONS
+ static const char install_longopts[] ALIGN1 =
+--- /dev/null
++++ b/include/bionic_resolv.h
+@@ -0,0 +1,112 @@
++#pragma once
++
++// Struct/function definitions copied from headers in bionic/libc/dns
++
++#include <resolv.h>
++#include <net/if.h>
++
++/* Hard-coded defines */
++#define MAXNS			4	/* max # name servers we'll track */
++#define MAXDNSRCH		6	/* max # domains in search path */
++#define MAXDNSRCHPATH		256	/* max length of domain search paths */
++#define MAXNSSAMPLES		64	/* max # samples to store per server */
++#define	MAXRESOLVSORT		10	/* number of net to sort on */
++#define	MAXALIASES	35
++#define	MAXADDRS	35
++
++// These are function pointers
++typedef void* res_send_rhook;
++typedef void* res_send_qhook;
++
++struct res_static {
++  char* h_addr_ptrs[MAXADDRS + 1];
++  char* host_aliases[MAXALIASES];
++  char hostbuf[8 * 1024];
++  u_int32_t host_addr[16 / sizeof(u_int32_t)]; /* IPv4 or IPv6 */
++  FILE* hostf;
++  int stayopen;
++  const char* servent_ptr;
++  struct servent servent;
++  struct hostent host;
++};
++
++union res_sockaddr_union {
++	struct sockaddr_in	sin;
++#ifdef IN6ADDR_ANY_INIT
++	struct sockaddr_in6	sin6;
++#endif
++#ifdef ISC_ALIGN64
++	int64_t			__align64;	/* 64bit alignment */
++#else
++	int32_t			__align32;	/* 32bit alignment */
++#endif
++	char			__space[128];   /* max size */
++};
++
++struct __res_state_ext {
++	union res_sockaddr_union nsaddrs[MAXNS];
++	struct sort_list {
++		int     af;
++		union {
++			struct in_addr  ina;
++			struct in6_addr in6a;
++		} addr, mask;
++	} sort_list[MAXRESOLVSORT];
++	char nsuffix[64];
++	char nsuffix2[64];
++};
++
++struct __res_state {
++	unsigned	netid;			/* NetId: cache key and socket mark */
++	int	retrans;	 	/* retransmission time interval */
++	int	retry;			/* number of times to retransmit */
++#ifdef sun
++	u_int	options;		/* option flags - see below. */
++#else
++	u_long	options;		/* option flags - see below. */
++#endif
++	int	nscount;		/* number of name servers */
++	struct sockaddr_in
++		nsaddr_list[MAXNS];	/* address of name server */
++#define	nsaddr	nsaddr_list[0]		/* for backward compatibility */
++	u_short	id;			/* current message id */
++	char	*dnsrch[MAXDNSRCH+1];	/* components of domain to search */
++	char	defdname[256];		/* default domain (deprecated) */
++#ifdef sun
++	u_int	pfcode;			/* RES_PRF_ flags - see below. */
++#else
++	u_long	pfcode;			/* RES_PRF_ flags - see below. */
++#endif
++	unsigned ndots:4;		/* threshold for initial abs. query */
++	unsigned nsort:4;		/* number of elements in sort_list[] */
++	char	unused[3];
++	struct {
++		struct in_addr	addr;
++		uint32_t	mask;
++	} sort_list[MAXRESOLVSORT];
++#ifdef __OLD_RES_STATE
++	char lookups[4];
++#else
++	res_send_qhook qhook;		/* query hook */
++	res_send_rhook rhook;		/* response hook */
++	int	res_h_errno;		/* last one set for this context */
++	unsigned _mark;			/* If non-0 SET_MARK to _mark on all request sockets */
++	int	_vcsock;		/* PRIVATE: for res_send VC i/o */
++	u_int	_flags;			/* PRIVATE: see below */
++	u_int	_pad;			/* make _u 64 bit aligned */
++	union {
++		/* On an 32-bit arch this means 512b total. */
++		char	pad[72 - 4*sizeof (int) - 2*sizeof (void *)];
++		struct {
++			uint16_t		nscount;
++			uint16_t		nstimes[MAXNS];	/* ms. */
++			int			nssocks[MAXNS];
++			struct __res_state_ext *ext;	/* extention for IPv6 */
++		} _ext;
++	} _u;
++#endif
++        struct res_static   rstatic[1];
++};
++
++extern struct __res_state *__res_get_state(void);
++#define _res (*__res_get_state())
+--- a/include/libbb.h
++++ b/include/libbb.h
+@@ -456,7 +456,7 @@
+ # define ARCH_GLOBAL_PTR_OFF 0x80
+ #endif
+ 
+-#if defined(__x86_64__) || defined(i386)
++#if defined(i386)      /* only 32bit, x64 has emulated variable page size */
+ # define BB_ARCH_FIXED_PAGESIZE 4096
+ #elif defined(__arm__) /* only 32bit, 64bit ARM has variable page size */
+ # define BB_ARCH_FIXED_PAGESIZE 4096
+@@ -921,6 +921,8 @@
+ struct hostent *xgethostbyname(const char *name) FAST_FUNC;
+ // Also mount.c and inetd.c are using gethostbyname(),
+ // + inet_common.c has additional IPv4-only stuff
++/* Set the dns server in the global _res nameserver structure */
++void set_default_dns(const char *server);
+ 
+ 
+ struct tls_aes {
+@@ -2535,12 +2537,12 @@
+  * use bb_default_login_shell and following defines.
+  * If you change LIBBB_DEFAULT_LOGIN_SHELL,
+  * don't forget to change increment constant. */
+-#define LIBBB_DEFAULT_LOGIN_SHELL  "-/bin/sh"
++#define LIBBB_DEFAULT_LOGIN_SHELL  "-/system/bin/sh"
+ extern const char bb_default_login_shell[] ALIGN1;
+ /* "/bin/sh" */
+ #define DEFAULT_SHELL              (bb_default_login_shell+1)
+ /* "sh" */
+-#define DEFAULT_SHELL_SHORT_NAME   (bb_default_login_shell+6)
++#define DEFAULT_SHELL_SHORT_NAME   (bb_default_login_shell+13)
+ 
+ /* The following devices are the same on all systems.  */
+ #define CURRENT_TTY "/dev/tty"
+@@ -2584,9 +2586,15 @@
+ # define VC_4 "/dev/tty4"
+ # define VC_5 "/dev/tty5"
+ # define VC_FORMAT "/dev/tty%d"
+-# define LOOP_FORMAT "/dev/loop%u"
+-# define LOOP_NAMESIZE (sizeof("/dev/loop") + sizeof(int)*3 + 1)
+-# define LOOP_NAME "/dev/loop"
++# if defined(__ANDROID__)
++#  define LOOP_FORMAT "/dev/block/loop%u"
++#  define LOOP_NAMESIZE (sizeof("/dev/block/loop") + sizeof(int)*3 + 1)
++#  define LOOP_NAME "/dev/block/loop"
++# else
++#  define LOOP_FORMAT "/dev/loop%u"
++#  define LOOP_NAMESIZE (sizeof("/dev/loop") + sizeof(int)*3 + 1)
++#  define LOOP_NAME "/dev/loop"
++# endif
+ # define FB_0 "/dev/fb0"
+ #endif
+ 
+--- a/include/platform.h
++++ b/include/platform.h
+@@ -550,12 +550,15 @@
+ # if __ANDROID_API__ >= 21
+ #  undef HAVE_WAIT3
+ # endif
++# if __ANDROID_API__ < 24
++#  undef HAVE_STRCHRNUL
++# endif
+ # undef HAVE_MEMPCPY
+-# undef HAVE_STRCHRNUL
+ # undef HAVE_STRVERSCMP
+ # undef HAVE_UNLOCKED_LINE_OPS
+ # undef HAVE_NET_ETHERNET_H
+ # undef HAVE_PRINTF_PERCENTM
++# undef HAVE_SETBIT
+ #endif
+ 
+ /*
+--- /dev/null
++++ b/include/sys/kd.h
+@@ -0,0 +1,34 @@
++/* Copyright (C) 1996-2015 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <http://www.gnu.org/licenses/>.  */
++
++#ifndef _SYS_KD_H
++#define _SYS_KD_H	1
++
++/* Make sure the <linux/types.h> header is not loaded.  */
++#ifndef _LINUX_TYPES_H
++# define _LINUX_TYPES_H		1
++# define __undef_LINUX_TYPES_H
++#endif
++
++#include <linux/kd.h>
++
++#ifdef __undef_LINUX_TYPES_H
++# undef _LINUX_TYPES_H
++# undef __undef_LINUX_TYPES_H
++#endif
++
++#endif	/* sys/kd.h */
+--- a/init/init.c
++++ b/init/init.c
+@@ -1106,7 +1106,7 @@
+ 
+ 	/* Make sure environs is set to something sane */
+ 	putenv((char *) bb_PATH_root_path);
+-	putenv((char *) "SHELL=/bin/sh");
++	putenv((char *) "SHELL=/system/bin/sh");
+ 	putenv((char *) "USER=root"); /* needed? why? */
+ 	/* Linux kernel sets HOME="/" when execing init,
+ 	 * and it can be overridden (but not unset?) on kernel's command line.
+--- a/libbb/appletlib.c
++++ b/libbb/appletlib.c
+@@ -1117,7 +1117,10 @@
+ 		argv++;
+ 	}
+ # endif
+-	applet_name = argv[0];
++	if (is_suffixed_with(argv[0], "busybox.so"))
++		applet_name = "busybox";
++	else
++		applet_name = argv[0];
+ 	if (applet_name[0] == '-')
+ 		applet_name++;
+ 	applet_name = bb_basename(applet_name);
+--- a/libbb/get_shell_name.c
++++ b/libbb/get_shell_name.c
+@@ -17,6 +17,10 @@
+ 	if (shell && shell[0])
+ 		return shell;
+ 
++#ifdef __ANDROID__
++	return DEFAULT_SHELL_SHORT_NAME;
++#endif
++
+ 	pw = getpwuid(getuid());
+ 	if (pw && pw->pw_shell && pw->pw_shell[0])
+ 		return pw->pw_shell;
+--- a/libbb/Kbuild.src
++++ b/libbb/Kbuild.src
+@@ -120,6 +120,9 @@
+ lib-y += xreadlink.o
+ lib-y += xrealloc_vector.o
+ 
++# for android-busybox-ndk
++lib-y += wrap_funcs.o
++
+ lib-$(CONFIG_MOUNT) += match_fstype.o
+ lib-$(CONFIG_UMOUNT) += match_fstype.o
+ 
+--- a/libbb/missing_syscalls.c
++++ b/libbb/missing_syscalls.c
+@@ -8,33 +8,11 @@
+ #include "libbb.h"
+ 
+ #if defined(ANDROID) || defined(__ANDROID__)
+-/*# include <linux/timex.h> - for struct timex, but may collide with <time.h> */
+ # include <sys/syscall.h>
+-pid_t getsid(pid_t pid)
+-{
+-	return syscall(__NR_getsid, pid);
+-}
+-
+-int sethostname(const char *name, size_t len)
+-{
+-	return syscall(__NR_sethostname, name, len);
+-}
+-
+-struct timex;
+-int adjtimex(struct timex *buf)
+-{
+-	return syscall(__NR_adjtimex, buf);
+-}
+ 
+ int pivot_root(const char *new_root, const char *put_old)
+ {
+ 	return syscall(__NR_pivot_root, new_root, put_old);
+ }
+ 
+-# if __ANDROID_API__ < 21
+-int tcdrain(int fd)
+-{
+-	return ioctl(fd, TCSBRK, 1);
+-}
+-# endif
+ #endif
+--- /dev/null
++++ b/libbb/wrap_funcs.c
+@@ -0,0 +1,246 @@
++/*
++ * Copyright (c) 2003 Constantin S. Svintsoff <kostik@iclub.nsu.ru>
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ * 3. The names of the authors may not be used to endorse or promote
++ *    products derived from this software without specific prior written
++ *    permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
++ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
++ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
++ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
++ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
++ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
++ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
++ * SUCH DAMAGE.
++ */
++
++#include <sys/param.h>
++#include <sys/stat.h>
++#include <sys/syscall.h>
++
++#include <errno.h>
++#include <stdlib.h>
++#include <string.h>
++#include <unistd.h>
++#include <fcntl.h>
++
++#include "libbb.h"
++#include "bionic_resolv.h"
++
++char * __wrap_realpath(const char * __restrict path, char * __restrict resolved)
++{
++    struct stat sb;
++    char *p, *q, *s;
++    size_t left_len, resolved_len;
++    unsigned symlinks;
++    int m, slen;
++    char left[PATH_MAX], next_token[PATH_MAX], symlink[PATH_MAX];
++
++    if (path == NULL) {
++        errno = EINVAL;
++        return (NULL);
++    }
++    if (path[0] == '\0') {
++        errno = ENOENT;
++        return (NULL);
++    }
++    if (resolved == NULL) {
++        resolved = malloc(PATH_MAX);
++        if (resolved == NULL)
++            return (NULL);
++        m = 1;
++    } else
++        m = 0;
++    symlinks = 0;
++    if (path[0] == '/') {
++        resolved[0] = '/';
++        resolved[1] = '\0';
++        if (path[1] == '\0')
++            return (resolved);
++        resolved_len = 1;
++        left_len = strlcpy(left, path + 1, sizeof(left));
++    } else {
++        if (getcwd(resolved, PATH_MAX) == NULL) {
++            if (m)
++                free(resolved);
++            else {
++                resolved[0] = '.';
++                resolved[1] = '\0';
++            }
++            return (NULL);
++        }
++        resolved_len = strlen(resolved);
++        left_len = strlcpy(left, path, sizeof(left));
++    }
++    if (left_len >= sizeof(left) || resolved_len >= PATH_MAX) {
++        if (m)
++            free(resolved);
++        errno = ENAMETOOLONG;
++        return (NULL);
++    }
++
++    /*
++     * Iterate over path components in `left'.
++     */
++    while (left_len != 0) {
++        /*
++         * Extract the next path component and adjust `left'
++         * and its length.
++         */
++        p = strchr(left, '/');
++        s = p ? p : left + left_len;
++        if (s - left >= sizeof(next_token)) {
++            if (m)
++                free(resolved);
++            errno = ENAMETOOLONG;
++            return (NULL);
++        }
++        memcpy(next_token, left, s - left);
++        next_token[s - left] = '\0';
++        left_len -= s - left;
++        if (p != NULL)
++            memmove(left, s + 1, left_len + 1);
++        if (resolved[resolved_len - 1] != '/') {
++            if (resolved_len + 1 >= PATH_MAX) {
++                if (m)
++                    free(resolved);
++                errno = ENAMETOOLONG;
++                return (NULL);
++            }
++            resolved[resolved_len++] = '/';
++            resolved[resolved_len] = '\0';
++        }
++        if (next_token[0] == '\0') {
++            /* Handle consequential slashes. */
++            continue;
++        }
++        else if (strcmp(next_token, ".") == 0)
++            continue;
++        else if (strcmp(next_token, "..") == 0) {
++            /*
++             * Strip the last path component except when we have
++             * single "/"
++             */
++            if (resolved_len > 1) {
++                resolved[resolved_len - 1] = '\0';
++                q = strrchr(resolved, '/') + 1;
++                *q = '\0';
++                resolved_len = q - resolved;
++            }
++            continue;
++        }
++
++        /*
++         * Append the next path component and lstat() it.
++         */
++        resolved_len = strlcat(resolved, next_token, PATH_MAX);
++        if (resolved_len >= PATH_MAX) {
++            if (m)
++                free(resolved);
++            errno = ENAMETOOLONG;
++            return (NULL);
++        }
++        if (lstat(resolved, &sb) != 0) {
++            if (m)
++                free(resolved);
++            return (NULL);
++        }
++        if (S_ISLNK(sb.st_mode)) {
++            if (symlinks++ > MAXSYMLINKS) {
++                if (m)
++                    free(resolved);
++                errno = ELOOP;
++                return (NULL);
++            }
++            slen = readlink(resolved, symlink, sizeof(symlink) - 1);
++            if (slen < 0) {
++                if (m)
++                    free(resolved);
++                return (NULL);
++            }
++            symlink[slen] = '\0';
++            if (symlink[0] == '/') {
++                resolved[1] = 0;
++                resolved_len = 1;
++            } else if (resolved_len > 1) {
++                /* Strip the last path component. */
++                resolved[resolved_len - 1] = '\0';
++                q = strrchr(resolved, '/') + 1;
++                *q = '\0';
++                resolved_len = q - resolved;
++            }
++
++            /*
++             * If there are any path components left, then
++             * append them to symlink. The result is placed
++             * in `left'.
++             */
++            if (p != NULL) {
++                if (symlink[slen - 1] != '/') {
++                    if (slen + 1 >= sizeof(symlink)) {
++                        if (m)
++                            free(resolved);
++                        errno = ENAMETOOLONG;
++                        return (NULL);
++                    }
++                    symlink[slen] = '/';
++                    symlink[slen + 1] = 0;
++                }
++                left_len = strlcat(symlink, left,
++                                   sizeof(symlink));
++                if (left_len >= sizeof(left)) {
++                    if (m)
++                        free(resolved);
++                    errno = ENAMETOOLONG;
++                    return (NULL);
++                }
++            }
++            left_len = strlcpy(left, symlink, sizeof(left));
++        } else if (!S_ISDIR(sb.st_mode) && p != NULL) {
++            if (m)
++                free(resolved);
++            errno = ENOTDIR;
++            return (NULL);
++        }
++    }
++
++    /*
++     * Remove trailing slash except when the resolved pathname
++     * is a single "/".
++     */
++    if (resolved_len > 1 && resolved[resolved_len - 1] == '/')
++        resolved[resolved_len - 1] = '\0';
++    return (resolved);
++}
++
++int __wrap_renameat(int old_dir_fd, const char *old_path, int new_dir_fd, const char *new_path) {
++#ifdef __NR_renameat
++    return syscall(__NR_renameat, old_dir_fd, old_path, new_dir_fd, new_path);
++#else
++    return syscall(__NR_renameat2, old_dir_fd, old_path, new_dir_fd, new_path, 0);
++#endif
++}
++
++int __wrap_rename(const char *old_path, const char *new_path) {
++    return __wrap_renameat(AT_FDCWD, old_path, AT_FDCWD, new_path);
++}
++
++extern typeof(getaddrinfo) __real_getaddrinfo;
++
++int __wrap_getaddrinfo(const char *node, const char *service, const struct addrinfo *hints, struct addrinfo **res) {
++    // Statically linked bionic does not have a global DNS, need to set it
++    set_default_dns(NULL);
++    return __real_getaddrinfo(node, service, hints, res);
++}
+--- a/libbb/xconnect.c
++++ b/libbb/xconnect.c
+@@ -15,6 +15,7 @@
+ # include <linux/netlink.h>
+ #endif
+ #include "libbb.h"
++#include "bionic_resolv.h"
+ 
+ int FAST_FUNC setsockopt_int(int fd, int level, int optname, int optval)
+ {
+@@ -518,3 +519,39 @@
+ {
+ 	return sockaddr2str(sa, NI_NUMERICHOST | NI_NUMERICSCOPE | IGNORE_PORT);
+ }
++
++void set_default_dns(const char *server)
++{
++	static bool has_set_default_dns = false;
++	len_and_sockaddr *lsa;
++
++	// Set a fallback DNS server
++	if (!server) {
++		if (!has_set_default_dns) {
++			server = "8.8.8.8";
++		} else {
++			return;
++		}
++	}
++
++	has_set_default_dns = true;
++
++	/* NB: this works even with, say, "[::1]:5353"! :) */
++	lsa = xhost2sockaddr(server, 53);
++
++	if (lsa->u.sa.sa_family == AF_INET) {
++		_res.nscount = 1;
++		/* struct copy */
++		_res.nsaddr_list[0] = lsa->u.sin;
++	}
++#if ENABLE_FEATURE_IPV6
++	if (lsa->u.sa.sa_family == AF_INET6) {
++		_res.nscount = 1;
++		_res._u._ext.nscount = 1;
++		/* struct copy */
++		_res._u._ext.ext->nsaddrs[0].sin6 = lsa->u.sin6;
++		_res.nsaddr_list[0].sin_family = 0;
++	}
++#endif
++	free(lsa);
++}
+--- a/miscutils/adjtimex.c
++++ b/miscutils/adjtimex.c
+@@ -33,11 +33,7 @@
+ //usage:     "\n	-p TCONST"
+ 
+ #include "libbb.h"
+-#ifdef __BIONIC__
+-# include <linux/timex.h>
+-#else
+-# include <sys/timex.h>
+-#endif
++#include <sys/timex.h>
+ 
+ static const uint16_t statlist_bit[] ALIGN2 = {
+ 	STA_PLL,
+--- a/networking/ether-wake.c
++++ b/networking/ether-wake.c
+@@ -130,7 +130,7 @@
+ 	eap = ether_aton_r(hostid, eaddr);
+ 	if (eap) {
+ 		bb_debug_msg("The target station address is %s\n\n", ether_ntoa(eap));
+-#if !defined(__UCLIBC__) || UCLIBC_VERSION >= KERNEL_VERSION(0, 9, 30)
++#if !defined(__BIONIC__) && (!defined(__UCLIBC__) || UCLIBC_VERSION >= KERNEL_VERSION(0, 9, 30))
+ 	} else if (ether_hostton(hostid, eaddr) == 0) {
+ 		bb_debug_msg("Station address for hostname %s is %s\n\n", hostid, ether_ntoa(eaddr));
+ #endif
+--- a/networking/ifconfig.c
++++ b/networking/ifconfig.c
+@@ -127,14 +127,6 @@
+ # define IFF_DYNAMIC     0x8000	/* dialup device with changing addresses */
+ #endif
+ 
+-#if ENABLE_FEATURE_IPV6
+-struct in6_ifreq {
+-	struct in6_addr ifr6_addr;
+-	uint32_t ifr6_prefixlen;
+-	int ifr6_ifindex;
+-};
+-#endif
+-
+ /*
+  * Here are the bit masks for the "flags" member of struct options below.
+  * N_ signifies no arg prefix; M_ signifies arg prefixed by '-'.
+--- a/networking/interface.c
++++ b/networking/interface.c
+@@ -54,7 +54,7 @@
+ #define _PATH_PROCNET_IFINET6           "/proc/net/if_inet6"
+ 
+ #ifdef HAVE_AFINET6
+-# ifndef _LINUX_IN6_H
++# ifndef _UAPI_IPV6_H
+ /*
+  * This is from linux/include/net/ipv6.h
+  */
+--- a/networking/nslookup.c
++++ b/networking/nslookup.c
+@@ -41,6 +41,9 @@
+ //#include <netdb.h>
+ #include "libbb.h"
+ #include "common_bufsiz.h"
++#ifdef __BIONIC__
++#include "bionic_resolv.h"
++#endif
+ 
+ /*
+  * Mini nslookup implementation for busybox
+@@ -146,7 +149,8 @@
+ 	struct sockaddr *sa;
+ 
+ #if ENABLE_FEATURE_IPV6
+-	sa = (struct sockaddr*)_res._u._ext.nsaddrs[0];
++	if (_res._u._ext.nscount)
++		sa = (struct sockaddr*)&_res._u._ext.ext->nsaddrs[0].sin6;
+ 	if (!sa)
+ #endif
+ 		sa = (struct sockaddr*)&_res.nsaddr_list[0];
+@@ -158,14 +162,16 @@
+ 	bb_putchar('\n');
+ }
+ 
++#if 0
+ /* alter the global _res nameserver structure to use
+    an explicit dns server instead of what is in /etc/resolv.conf */
+ static void set_default_dns(const char *server)
+ {
+ 	len_and_sockaddr *lsa;
+ 
++	// Set a fallback DNS server
+ 	if (!server)
+-		return;
++		server = "8.8.8.8";
+ 
+ 	/* NB: this works even with, say, "[::1]:5353"! :) */
+ 	lsa = xhost2sockaddr(server, 53);
+@@ -176,21 +182,17 @@
+ 		_res.nsaddr_list[0] = lsa->u.sin;
+ 	}
+ #if ENABLE_FEATURE_IPV6
+-	/* Hoped libc can cope with IPv4 address there too.
+-	 * No such luck, glibc 2.4 segfaults even with IPv6,
+-	 * maybe I misunderstand how to make glibc use IPv6 addr?
+-	 * (uclibc 0.9.31+ should work) */
+ 	if (lsa->u.sa.sa_family == AF_INET6) {
+-		// glibc neither SEGVs nor sends any dgrams with this
+-		// (strace shows no socket ops):
+-		//_res.nscount = 0;
++		_res.nscount = 1;
+ 		_res._u._ext.nscount = 1;
+-		/* store a pointer to part of malloc'ed lsa */
+-		_res._u._ext.nsaddrs[0] = &lsa->u.sin6;
+-		/* must not free(lsa)! */
+-	}
+-#endif
+-}
++		/* struct copy */
++		_res._u._ext.ext->nsaddrs[0].sin6 = lsa->u.sin6;
++		_res.nsaddr_list[0].sin_family = 0;
++	}
++#endif
++	free(lsa);
++}
++#endif
+ 
+ int nslookup_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
+ int nslookup_main(int argc, char **argv)
+@@ -203,9 +205,6 @@
+ 	if (!argv[1] || argv[1][0] == '-' || argc > 3)
+ 		bb_show_usage();
+ 
+-	/* initialize DNS structure _res used in printing the default
+-	 * name server and in the explicit name server option feature. */
+-	res_init();
+ 	/* rfc2133 says this enables IPv6 lookups */
+ 	/* (but it also says "may be enabled in /etc/resolv.conf") */
+ 	/*_res.options |= RES_USE_INET6;*/
+--- a/networking/tc.c
++++ b/networking/tc.c
+@@ -31,7 +31,7 @@
+ //usage:	"qdisc [handle QHANDLE] [root|"IF_FEATURE_TC_INGRESS("ingress|")"parent CLASSID]\n"
+ /* //usage: "[estimator INTERVAL TIME_CONSTANT]\n" */
+ //usage:	"	[[QDISC_KIND] [help|OPTIONS]]\n"
+-//usage:	"	QDISC_KIND := [p|b]fifo|tbf|prio|cbq|red|etc.\n"
++//usage:	"	QDISC_KIND := [p|b]fifo|tbf|prio|red|etc.\n"
+ //usage:	"qdisc show [dev STRING]"IF_FEATURE_TC_INGRESS(" [ingress]")"\n"
+ //usage:	"class [classid CLASSID] [root|parent CLASSID]\n"
+ //usage:	"	[[QDISC_KIND] [help|OPTIONS] ]\n"
+@@ -230,7 +230,7 @@
+ {
+ 	return 0;
+ }
+-#endif
++
+ static int cbq_print_opt(struct rtattr *opt)
+ {
+ 	struct rtattr *tb[TCA_CBQ_MAX+1];
+@@ -322,6 +322,7 @@
+  done:
+ 	return 0;
+ }
++#endif
+ 
+ static FAST_FUNC int print_qdisc(
+ 		const struct sockaddr_nl *who UNUSED_PARAM,
+@@ -373,7 +374,8 @@
+ 		if (qqq == 0) { /* pfifo_fast aka prio */
+ 			prio_print_opt(tb[TCA_OPTIONS]);
+ 		} else if (qqq == 1) { /* class based queuing */
+-			cbq_print_opt(tb[TCA_OPTIONS]);
++			/* cbq_print_opt(tb[TCA_OPTIONS]); */
++			printf("cbq not supported");
+ 		} else {
+ 			/* don't know how to print options for this qdisc */
+ 			printf("(options for %s)", name);
+@@ -444,7 +446,8 @@
+ 			/* nothing. */ /*prio_print_opt(tb[TCA_OPTIONS]);*/
+ 		} else if (qqq == 1) { /* class based queuing */
+ 			/* cbq_print_copt() is identical to cbq_print_opt(). */
+-			cbq_print_opt(tb[TCA_OPTIONS]);
++			/* cbq_print_opt(tb[TCA_OPTIONS]); */
++			printf("cbq not supported");
+ 		} else {
+ 			/* don't know how to print options for this class */
+ 			printf("(options for %s)", name);
+--- a/shell/ash.c
++++ b/shell/ash.c
+@@ -301,16 +301,14 @@
+ #endif
+ 
+ #include "NUM_APPLETS.h"
+-#if NUM_APPLETS == 1
+-/* STANDALONE does not make sense, and won't compile */
+-# undef CONFIG_FEATURE_SH_STANDALONE
+-# undef ENABLE_FEATURE_SH_STANDALONE
+-# undef IF_FEATURE_SH_STANDALONE
+-# undef IF_NOT_FEATURE_SH_STANDALONE
+-# define ENABLE_FEATURE_SH_STANDALONE 0
+-# define IF_FEATURE_SH_STANDALONE(...)
+-# define IF_NOT_FEATURE_SH_STANDALONE(...) __VA_ARGS__
+-#endif
++
++/* Magisk: Force enable standalone mode as it can be toggled at runtime */
++#undef ENABLE_FEATURE_SH_STANDALONE
++#undef IF_FEATURE_SH_STANDALONE
++#undef IF_NOT_FEATURE_SH_STANDALONE
++#define ENABLE_FEATURE_SH_STANDALONE 1
++#define IF_FEATURE_SH_STANDALONE(...) __VA_ARGS__
++#define IF_NOT_FEATURE_SH_STANDALONE(...)
+ 
+ #ifndef F_DUPFD_CLOEXEC
+ # define F_DUPFD_CLOEXEC F_DUPFD
+@@ -366,7 +364,9 @@
+ 	"b"   "notify",
+ 	"u"   "nounset",
+ 	"E"   "errtrace",
+-	"\0"  "vi"
++	"\0"  "vi",
++/* Magisk: toggle whether use standalone shell mode */
++	"\0"  "standalone"
+ #if BASH_PIPEFAIL
+ 	,"\0"  "pipefail"
+ #endif
+@@ -525,14 +525,15 @@
+ #define uflag optlist[13]
+ #define Eflag optlist[14]
+ #define viflag optlist[15]
++#define saflag optlist[16]
+ #if BASH_PIPEFAIL
+-# define pipefail optlist[16]
++# define pipefail optlist[17]
+ #else
+ # define pipefail 0
+ #endif
+ #if DEBUG
+-# define nolog optlist[16 + BASH_PIPEFAIL]
+-# define debug optlist[17 + BASH_PIPEFAIL]
++# define nolog optlist[17 + BASH_PIPEFAIL]
++# define debug optlist[18 + BASH_PIPEFAIL]
+ #endif
+ 
+ 	/* trap handler commands */
+@@ -6109,6 +6110,8 @@
+  * execve wrappers
+  */
+ #if ENABLE_FEATURE_SH_STANDALONE
++static char bb_exec_path[4096];
++
+ static void
+ tryexec_applet(int applet_no, const char *cmd, char **argv, char **envp)
+ {
+@@ -6163,7 +6166,7 @@
+ 		/* does not return */
+ 	}
+ 	/* re-exec ourselves with the new arguments */
+-	execve(bb_busybox_exec_path, argv, envp);
++	execve(bb_exec_path, argv, envp);
+ 	/* If they called chroot or otherwise made the binary
+ 	 * no longer executable, return.
+ 	 */
+@@ -6181,7 +6184,7 @@
+ #else
+ 	execve(cmd, argv, envp);
+ #endif
+-	if (cmd != bb_busybox_exec_path && errno == ENOEXEC) {
++	if (cmd != bb_exec_path && errno == ENOEXEC) {
+ 		/* Run "cmd" as a shell script:
+ 		 * http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html
+ 		 * "If the execve() function fails with ENOEXEC, the shell
+@@ -6199,7 +6202,7 @@
+ 		 * to interpret foreign ELF binaries as shell scripts.
+ 		 */
+ 		argv[0] = (char*) cmd;
+-		cmd = bb_busybox_exec_path;
++		cmd = bb_exec_path;
+ 		/* NB: this is only possible because all callers of shellexec()
+ 		 * ensure that the argv[-1] slot exists!
+ 		 */
+@@ -6228,7 +6231,7 @@
+ 	} else {
+ #if ENABLE_FEATURE_SH_STANDALONE
+ 		int applet_no = find_applet_by_name(prog);
+-		if (applet_no >= 0)
++		if (saflag && applet_no >= 0)
+ 			tryexec_applet(applet_no, prog, argv, envp);
+ 		/* We tried execing ourself, but it didn't work.
+ 		 * Maybe /proc/self/exe doesn't exist?
+@@ -8823,7 +8826,7 @@
+ 		goto fail;
+ 
+ #if ENABLE_FEATURE_SH_STANDALONE
+-	{
++	if (saflag) {
+ 		int applet_no = find_applet_by_name(name);
+ 		if (applet_no >= 0) {
+ 			entry->cmdtype = CMDNORMAL;
+@@ -14403,7 +14406,7 @@
+ 		}
+ 	}
+ # if ENABLE_FEATURE_SH_STANDALONE
+-	{
++	if (saflag) {
+ 		const char *a = applet_names;
+ 		while (*a) {
+ 			col += out1fmt("%c%s", ((col == 0) ? '\t' : ' '), a);
+@@ -14915,7 +14918,7 @@
+ 	int i;
+ 	int login_sh;
+ 
+-	login_sh = /*xargv[0] &&*/ xargv[0][0] == '-';
++	login_sh = 1; /* Preserve the previous Android login-shell behavior. */
+ #if NUM_SCRIPTS > 0
+ 	if (minusc)
+ 		goto setarg0;
+@@ -15075,6 +15078,14 @@
+ 	init();
+ 	setstackmark(&smark);
+ 
++	/*
++	* Hack: use resolved path of /proc/self/exe to workaround Samsung kernel blocking
++	* executables running as UID=0 in paths such as /proc
++	*/
++	ssize_t exec_len = readlink("/proc/self/exe", bb_exec_path, sizeof(bb_exec_path) - 1);
++	if (exec_len >= 0) bb_exec_path[exec_len] = '\0';
++	else strcpy(bb_exec_path, "/proc/self/exe");
++
+ #if NUM_SCRIPTS > 0
+ 	if (argc < 0)
+ 		/* Non-NULL minusc tells procargs that an embedded script is being run */
+@@ -15086,11 +15097,16 @@
+ 	trace_puts_args(argv);
+ #endif
+ 
++	char *ash_sa = getenv("ASH_STANDALONE");
++	if (ash_sa && strcmp(ash_sa, "1") == 0)
++		/* Magisk: toggle standalone shell with environment ASH_STANDALONE */
++		saflag = 1;
++
+ 	if (login_sh) {
+ 		const char *hp;
+ 
+ 		state = 1;
+-		read_profile("/etc/profile");
++		read_profile("/system/etc/profile");
+  state1:
+ 		state = 2;
+ 		hp = lookupvar("HOME");
+--- a/shell/hush.c
++++ b/shell/hush.c
+@@ -2082,6 +2082,15 @@
+ 		,
+ };
+ 
++#ifdef __BIONIC__
++static int sigisemptyset(const sigset_t *set)
++{
++    sigset_t empty;
++    sigemptyset(&empty);
++    return memcmp(&empty, set, sizeof(sigset_t)) == 0;
++}
++#endif
++
+ static void record_pending_signo(int sig)
+ {
+ 	sigaddset(&G.pending_set, sig);
+--- a/util-linux/ipcrm.c
++++ b/util-linux/ipcrm.c
+@@ -28,7 +28,8 @@
+ #include <sys/msg.h>
+ #include <sys/sem.h>
+ 
+-#if defined(__GNU_LIBRARY__) && !defined(_SEM_SEMUN_UNDEFINED)
++#if (defined(__GNU_LIBRARY__) && !defined(_SEM_SEMUN_UNDEFINED)) || \
++    defined(__ANDROID__)
+ /* union semun is defined by including <sys/sem.h> */
+ #else
+ /* according to X/OPEN we have to define it ourselves */
+--- a/util-linux/ipcs.c
++++ b/util-linux/ipcs.c
+@@ -71,7 +71,8 @@
+ /* The last arg of semctl is a union semun, but where is it defined?
+    X/OPEN tells us to define it ourselves, but until recently
+    Linux include files would also define it. */
+-#if defined(__GNU_LIBRARY__) && !defined(_SEM_SEMUN_UNDEFINED)
++#if (defined(__GNU_LIBRARY__) && !defined(_SEM_SEMUN_UNDEFINED)) || \
++    defined(__ANDROID__)
+ /* union semun is defined by including <sys/sem.h> */
+ #else
+ /* according to X/OPEN we have to define it ourselves */
+--- a/util-linux/mount.c
++++ b/util-linux/mount.c
+@@ -774,7 +774,8 @@
+ 	// If the mount was successful, and we're maintaining an old-style
+ 	// mtab file by hand, add the new entry to it now.
+  mtab:
+-	if (USE_MTAB && !rc && !(vfsflags & MS_REMOUNT)) {
++ #if USE_MTAB
++	if (!rc && !(vfsflags & MS_REMOUNT)) {
+ 		char *fsname;
+ 		FILE *mountTable = setmntent(bb_path_mtab_file, "a+");
+ 		const char *option_str = mount_option_str;
+@@ -820,6 +821,7 @@
+ 			free(fsname);
+ 		}
+ 	}
++#endif // USE_MTAB
+  ret:
+ 	return rc;
+ }
+--- a/util-linux/swaponoff.c
++++ b/util-linux/swaponoff.c
+@@ -75,9 +75,7 @@
+ #include "libbb.h"
+ #include "common_bufsiz.h"
+ #include <mntent.h>
+-#ifndef __BIONIC__
+-# include <sys/swap.h>
+-#endif
++#include <sys/swap.h>
+ 
+ #if ENABLE_FEATURE_SWAPONOFF_LABEL
+ # include "volume_id.h"
+--- a/include/unicode.h
++++ b/include/unicode.h
+@@ -32,8 +32,8 @@
+ #else
+ 
+-# if CONFIG_LAST_SUPPORTED_WCHAR < 126 || CONFIG_LAST_SUPPORTED_WCHAR >= 0x30000
++# if CONFIG_LAST_SUPPORTED_WCHAR < 126 || CONFIG_LAST_SUPPORTED_WCHAR > 0x10ffff
+ #  undef CONFIG_LAST_SUPPORTED_WCHAR
+-#  define CONFIG_LAST_SUPPORTED_WCHAR 0x2ffff
++#  define CONFIG_LAST_SUPPORTED_WCHAR 0x10ffff
+ # endif
+ 
+ # if CONFIG_LAST_SUPPORTED_WCHAR < 0x300

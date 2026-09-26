@@ -1,0 +1,4288 @@
+{
+  "scope": "Current start.sh, tools/tools.sh, root tools.sh and tools/dex_check.sh; entry, backup, restore, update, diagnostics and fallback paths.",
+  "input_sha256": {
+    "active-tools.sh": "0608dcce165bb9e3cff8b8d19c4ea9e8a8279d667db3174ffbd377a84bd372d0",
+    "classes.dex": "2415ba22df9effe3ca57a2e0df859299b7254228a3e3e28d95df1ed777c98770",
+    "cmd": "08da8ac23b6e99788fd3ce6c19c7b5a083b2ad48be35963a48d01d6ee7f3bb6d",
+    "dex_check.sh": "d31898b87f6e5f57d2e8812d11d76154831c47fefeef685422da00630a92c8f9",
+    "keycheck": "50645ee0e0d2a7d64fb4a1286446df7a4445f3d11aefd49eeeb88515b314c363",
+    "speednative": "44ff6f97047050560816bf9ebc53d2e7112973d883839dc921ec1ac21188e550",
+    "start.sh": "069cf69a7005765f2d17be2a7f114d0124b3f5d17db9697c3a7fc55f69d6d772",
+    "tools.sh": "2d8ed53a2c59575c2ca6823ecea8214a94129f5781d29eec59537aca0cd18e9d"
+  },
+  "reference_applets": 358,
+  "text_references": 89,
+  "no_text_reference": 269,
+  "candidate_groups": {
+    "Web/FTP/Telnet/列印/郵件伺服器": [
+      "httpd",
+      "ftpd",
+      "telnetd",
+      "tftpd",
+      "sendmail",
+      "popmaildir",
+      "makemime",
+      "reformime"
+    ],
+    "舊式主控台與硬體": [
+      "beep",
+      "chvt",
+      "deallocvt",
+      "dumpkmap",
+      "fgconsole",
+      "kbd_mode",
+      "loadfont",
+      "loadkmap",
+      "openvt",
+      "setconsole",
+      "setfont",
+      "setkeycodes",
+      "setlogcons",
+      "showkey",
+      "conspy",
+      "fbset",
+      "fbsplash",
+      "microcom"
+    ],
+    "MTD/UBI/傳統檔案系統工具": [
+      "flash_eraseall",
+      "flash_lock",
+      "flash_unlock",
+      "nanddump",
+      "nandwrite",
+      "ubiattach",
+      "ubidetach",
+      "ubimkvol",
+      "ubirename",
+      "ubirmvol",
+      "ubirsvol",
+      "ubiupdatevol",
+      "fsck.minix",
+      "fdformat",
+      "freeramdisk",
+      "raidautorun"
+    ],
+    "套件／服務／排程管理": [
+      "crond",
+      "crontab",
+      "inetd",
+      "start-stop-daemon",
+      "svc",
+      "svok",
+      "acpid"
+    ]
+  },
+  "applied_removals": [
+    "acpid",
+    "adjtimex",
+    "ar",
+    "arch",
+    "arp",
+    "arping",
+    "ascii",
+    "base32",
+    "base64",
+    "bbconfig",
+    "beep",
+    "blkdiscard",
+    "blkid",
+    "blockdev",
+    "brctl",
+    "bunzip2",
+    "bzcat",
+    "bzip2",
+    "cal",
+    "chat",
+    "chattr",
+    "chgrp",
+    "chroot",
+    "chrt",
+    "chvt",
+    "conspy",
+    "cpio",
+    "crc32",
+    "crond",
+    "crontab",
+    "cttyhack",
+    "dc",
+    "deallocvt",
+    "depmod",
+    "devmem",
+    "dhcprelay",
+    "diff",
+    "dmesg",
+    "dnsd",
+    "dnsdomainname",
+    "dos2unix",
+    "dumpkmap",
+    "dumpleases",
+    "ed",
+    "egrep",
+    "eject",
+    "env",
+    "ether-wake",
+    "expand",
+    "expr",
+    "factor",
+    "fakeidentd",
+    "fallocate",
+    "false",
+    "fatattr",
+    "fbset",
+    "fbsplash",
+    "fdflush",
+    "fdformat",
+    "fdisk",
+    "fgconsole",
+    "fgrep",
+    "find",
+    "findfs",
+    "flash_eraseall",
+    "flash_lock",
+    "flash_unlock",
+    "flock",
+    "fold",
+    "free",
+    "freeramdisk",
+    "fsck",
+    "fsck.minix",
+    "fsfreeze",
+    "fstrim",
+    "fsync",
+    "ftpd",
+    "ftpget",
+    "ftpput",
+    "fuser",
+    "getopt",
+    "groups",
+    "gunzip",
+    "gzip",
+    "hd",
+    "hdparm",
+    "hexdump",
+    "hexedit",
+    "hostname",
+    "httpd",
+    "hush",
+    "hwclock",
+    "ifdown",
+    "ifenslave",
+    "ifplugd",
+    "ifup",
+    "inetd",
+    "inotifyd",
+    "insmod",
+    "install",
+    "ionice",
+    "iostat",
+    "ipaddr",
+    "ipcalc",
+    "ipcrm",
+    "ipcs",
+    "iplink",
+    "ipneigh",
+    "iproute",
+    "iprule",
+    "iptunnel",
+    "kbd_mode",
+    "killall",
+    "killall5",
+    "klogd",
+    "less",
+    "link",
+    "loadfont",
+    "loadkmap",
+    "logread",
+    "losetup",
+    "lsattr",
+    "lsmod",
+    "lsof",
+    "lspci",
+    "lsscsi",
+    "lsusb",
+    "lzcat",
+    "lzma",
+    "lzop",
+    "lzopcat",
+    "makedevs",
+    "makemime",
+    "man",
+    "mesg",
+    "microcom",
+    "mim",
+    "mke2fs",
+    "mkfs.ext2",
+    "mknod",
+    "mkswap",
+    "modinfo",
+    "modprobe",
+    "more",
+    "mountpoint",
+    "mpstat",
+    "nameif",
+    "nanddump",
+    "nandwrite",
+    "nbd-client",
+    "netstat",
+    "nice",
+    "nl",
+    "nmeter",
+    "nologin",
+    "nproc",
+    "nsenter",
+    "nslookup",
+    "nuke",
+    "od",
+    "openvt",
+    "partprobe",
+    "patch",
+    "pgrep",
+    "pidof",
+    "ping",
+    "ping6",
+    "pipe_progress",
+    "pivot_root",
+    "pkill",
+    "pmap",
+    "popmaildir",
+    "powertop",
+    "printenv",
+    "pscan",
+    "pstree",
+    "pwdx",
+    "raidautorun",
+    "rdate",
+    "rdev",
+    "readprofile",
+    "realpath",
+    "reformime",
+    "reset",
+    "resize",
+    "resume",
+    "rfkill",
+    "rmmod",
+    "route",
+    "rtcwake",
+    "run-init",
+    "run-parts",
+    "runcon",
+    "rx",
+    "script",
+    "scriptreplay",
+    "seedrng",
+    "selinuxenabled",
+    "sendmail",
+    "sestatus",
+    "setconsole",
+    "setenforce",
+    "setfattr",
+    "setfont",
+    "setkeycodes",
+    "setlogcons",
+    "setpriv",
+    "setserial",
+    "setsid",
+    "setuidgid",
+    "sha1sum",
+    "sha3sum",
+    "sha512sum",
+    "showkey",
+    "shred",
+    "shuf",
+    "slattach",
+    "smemcap",
+    "split",
+    "ssl_client",
+    "start-stop-daemon",
+    "strings",
+    "stty",
+    "sum",
+    "svc",
+    "svok",
+    "swapoff",
+    "swapon",
+    "switch_root",
+    "sync",
+    "sysctl",
+    "syslogd",
+    "tac",
+    "tar",
+    "tc",
+    "tcpsvd",
+    "tee",
+    "telnet",
+    "telnetd",
+    "tftp",
+    "tftpd",
+    "time",
+    "top",
+    "traceroute",
+    "traceroute6",
+    "tree",
+    "truncate",
+    "ts",
+    "tsort",
+    "tty",
+    "ttysize",
+    "tunctl",
+    "tune2fs",
+    "ubiattach",
+    "ubidetach",
+    "ubimkvol",
+    "ubirename",
+    "ubirmvol",
+    "ubirsvol",
+    "ubiupdatevol",
+    "udhcpc",
+    "udhcpc6",
+    "udhcpd",
+    "udpsvd",
+    "uevent",
+    "umount",
+    "uncompress",
+    "unexpand",
+    "unix2dos",
+    "unlink",
+    "unlzma",
+    "unlzop",
+    "unshare",
+    "unxz",
+    "uptime",
+    "uudecode",
+    "uuencode",
+    "vconfig",
+    "vi",
+    "volname",
+    "watch",
+    "watchdog",
+    "wget",
+    "whois",
+    "xxd",
+    "xz",
+    "xzcat",
+    "yes",
+    "zcat",
+    "zcip"
+  ],
+  "retained_applets": 68,
+  "current_binary_sha256": "88bdc7e3d9d38ced8a51a35e811240e7f4372db61b541943f53cc5f889f1e29b",
+  "sizes_bytes": {
+    "old_1_36_1_1": 1710600,
+    "full_1_38_0": 2102136,
+    "trim41_1_38_0": 2029496,
+    "sample_118_1_38_0": 555272,
+    "speedbackup68_before_codec_trim": 937264,
+    "speedbackup68_ziponly_before_unicode": 932144,
+    "current": 932208,
+    "saved_from_full_1_38_0": 1169928,
+    "saved_from_trim41_1_38_0": 1097288,
+    "saved_from_speedbackup68_before_codec_trim": 5056
+  },
+  "unreferenced": [
+    "acpid",
+    "adjtimex",
+    "ar",
+    "arch",
+    "arp",
+    "arping",
+    "ascii",
+    "ash",
+    "base32",
+    "base64",
+    "bbconfig",
+    "beep",
+    "blkdiscard",
+    "blkid",
+    "blockdev",
+    "brctl",
+    "bunzip2",
+    "bzcat",
+    "bzip2",
+    "cal",
+    "chat",
+    "chattr",
+    "chgrp",
+    "chroot",
+    "chrt",
+    "chvt",
+    "conspy",
+    "cpio",
+    "crc32",
+    "crond",
+    "crontab",
+    "cttyhack",
+    "dc",
+    "deallocvt",
+    "depmod",
+    "devmem",
+    "dhcprelay",
+    "dmesg",
+    "dnsd",
+    "dnsdomainname",
+    "dos2unix",
+    "dumpkmap",
+    "dumpleases",
+    "ed",
+    "egrep",
+    "eject",
+    "ether-wake",
+    "expand",
+    "expr",
+    "factor",
+    "fakeidentd",
+    "fallocate",
+    "fatattr",
+    "fbset",
+    "fbsplash",
+    "fdflush",
+    "fdformat",
+    "fdisk",
+    "fgconsole",
+    "fgrep",
+    "findfs",
+    "flash_eraseall",
+    "flash_lock",
+    "flash_unlock",
+    "flock",
+    "fold",
+    "free",
+    "freeramdisk",
+    "fsck",
+    "fsck.minix",
+    "fsfreeze",
+    "fstrim",
+    "fsync",
+    "ftpd",
+    "ftpget",
+    "ftpput",
+    "fuser",
+    "getopt",
+    "groups",
+    "gunzip",
+    "gzip",
+    "hd",
+    "hdparm",
+    "hexdump",
+    "hexedit",
+    "hostname",
+    "httpd",
+    "hush",
+    "hwclock",
+    "ifdown",
+    "ifenslave",
+    "ifplugd",
+    "ifup",
+    "inetd",
+    "inotifyd",
+    "insmod",
+    "ionice",
+    "iostat",
+    "ipcalc",
+    "ipcrm",
+    "ipcs",
+    "iplink",
+    "ipneigh",
+    "iproute",
+    "iprule",
+    "iptunnel",
+    "kbd_mode",
+    "killall",
+    "killall5",
+    "klogd",
+    "less",
+    "loadfont",
+    "loadkmap",
+    "logread",
+    "losetup",
+    "lsattr",
+    "lsmod",
+    "lsof",
+    "lspci",
+    "lsscsi",
+    "lsusb",
+    "lzcat",
+    "lzma",
+    "lzop",
+    "lzopcat",
+    "makedevs",
+    "makemime",
+    "man",
+    "mesg",
+    "microcom",
+    "mim",
+    "mke2fs",
+    "mkfs.ext2",
+    "mknod",
+    "mkswap",
+    "modinfo",
+    "modprobe",
+    "more",
+    "mountpoint",
+    "mpstat",
+    "nameif",
+    "nanddump",
+    "nandwrite",
+    "nbd-client",
+    "netstat",
+    "nice",
+    "nl",
+    "nmeter",
+    "nologin",
+    "nproc",
+    "nsenter",
+    "nslookup",
+    "nuke",
+    "od",
+    "openvt",
+    "partprobe",
+    "pgrep",
+    "pidof",
+    "ping6",
+    "pipe_progress",
+    "pivot_root",
+    "pkill",
+    "pmap",
+    "popmaildir",
+    "powertop",
+    "printenv",
+    "pscan",
+    "pstree",
+    "pwdx",
+    "raidautorun",
+    "rdate",
+    "rdev",
+    "readprofile",
+    "realpath",
+    "reformime",
+    "resize",
+    "rfkill",
+    "rmmod",
+    "rtcwake",
+    "run-init",
+    "run-parts",
+    "runcon",
+    "rx",
+    "scriptreplay",
+    "seedrng",
+    "selinuxenabled",
+    "sendmail",
+    "sestatus",
+    "setconsole",
+    "setenforce",
+    "setfattr",
+    "setfont",
+    "setkeycodes",
+    "setlogcons",
+    "setpriv",
+    "setserial",
+    "setsid",
+    "setuidgid",
+    "sha1sum",
+    "sha3sum",
+    "sha512sum",
+    "showkey",
+    "shred",
+    "shuf",
+    "slattach",
+    "smemcap",
+    "ssl_client",
+    "start-stop-daemon",
+    "strings",
+    "stty",
+    "sum",
+    "svc",
+    "svok",
+    "swapoff",
+    "swapon",
+    "switch_root",
+    "sync",
+    "sysctl",
+    "syslogd",
+    "tac",
+    "tc",
+    "tcpsvd",
+    "tee",
+    "telnet",
+    "telnetd",
+    "tftp",
+    "tftpd",
+    "traceroute",
+    "traceroute6",
+    "truncate",
+    "tsort",
+    "ttysize",
+    "tunctl",
+    "tune2fs",
+    "ubiattach",
+    "ubidetach",
+    "ubimkvol",
+    "ubirename",
+    "ubirmvol",
+    "ubirsvol",
+    "ubiupdatevol",
+    "udhcpc",
+    "udhcpc6",
+    "udhcpd",
+    "udpsvd",
+    "uevent",
+    "umount",
+    "uncompress",
+    "unexpand",
+    "unix2dos",
+    "unlink",
+    "unlzma",
+    "unlzop",
+    "unshare",
+    "unxz",
+    "uudecode",
+    "uuencode",
+    "vconfig",
+    "vi",
+    "volname",
+    "watch",
+    "watchdog",
+    "wget",
+    "whois",
+    "xxd",
+    "xz",
+    "xzcat",
+    "zcat",
+    "zcip"
+  ],
+  "hits": {
+    "[": [
+      {
+        "file": "start.sh",
+        "line": 9
+      },
+      {
+        "file": "start.sh",
+        "line": 13
+      },
+      {
+        "file": "start.sh",
+        "line": 15
+      },
+      {
+        "file": "start.sh",
+        "line": 29
+      },
+      {
+        "file": "start.sh",
+        "line": 33
+      }
+    ],
+    "[[": [
+      {
+        "file": "active-tools.sh",
+        "line": 18
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 42
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 84
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 96
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 101
+      }
+    ],
+    "acpid": [],
+    "adjtimex": [],
+    "ar": [],
+    "arch": [],
+    "arp": [],
+    "arping": [],
+    "ascii": [],
+    "ash": [],
+    "awk": [
+      {
+        "file": "active-tools.sh",
+        "line": 341
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 900
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1978
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1994
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 2009
+      }
+    ],
+    "base32": [],
+    "base64": [],
+    "basename": [
+      {
+        "file": "active-tools.sh",
+        "line": 1029
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1411
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 11601
+      },
+      {
+        "file": "tools.sh",
+        "line": 1025
+      },
+      {
+        "file": "tools.sh",
+        "line": 1408
+      }
+    ],
+    "bbconfig": [],
+    "beep": [],
+    "blkdiscard": [],
+    "blkid": [],
+    "blockdev": [],
+    "brctl": [],
+    "bunzip2": [],
+    "bzcat": [],
+    "bzip2": [],
+    "cal": [],
+    "cat": [
+      {
+        "file": "active-tools.sh",
+        "line": 183
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 215
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 258
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 532
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 728
+      }
+    ],
+    "chat": [],
+    "chattr": [],
+    "chcon": [
+      {
+        "file": "active-tools.sh",
+        "line": 4790
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4792
+      },
+      {
+        "file": "tools.sh",
+        "line": 4791
+      },
+      {
+        "file": "tools.sh",
+        "line": 4793
+      }
+    ],
+    "chgrp": [],
+    "chmod": [
+      {
+        "file": "active-tools.sh",
+        "line": 197
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 204
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 265
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 2225
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 2382
+      }
+    ],
+    "chown": [
+      {
+        "file": "active-tools.sh",
+        "line": 198
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 17603
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 29365
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 29373
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 29704
+      }
+    ],
+    "chroot": [],
+    "chrt": [],
+    "chvt": [],
+    "cksum": [
+      {
+        "file": "active-tools.sh",
+        "line": 11473
+      },
+      {
+        "file": "tools.sh",
+        "line": 11477
+      }
+    ],
+    "clear": [
+      {
+        "file": "active-tools.sh",
+        "line": 9644
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 29547
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 30305
+      },
+      {
+        "file": "tools.sh",
+        "line": 9645
+      },
+      {
+        "file": "tools.sh",
+        "line": 29553
+      }
+    ],
+    "cmp": [
+      {
+        "file": "active-tools.sh",
+        "line": 1572
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 2096
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 7829
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 8034
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 12702
+      }
+    ],
+    "comm": [
+      {
+        "file": "active-tools.sh",
+        "line": 15441
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 15442
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 30855
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 30856
+      },
+      {
+        "file": "tools.sh",
+        "line": 15446
+      }
+    ],
+    "conspy": [],
+    "cp": [
+      {
+        "file": "active-tools.sh",
+        "line": 123
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 698
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4777
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 5098
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 5654
+      }
+    ],
+    "cpio": [],
+    "crc32": [],
+    "crond": [],
+    "crontab": [],
+    "cttyhack": [],
+    "cut": [
+      {
+        "file": "active-tools.sh",
+        "line": 120
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 477
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 481
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4326
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4334
+      }
+    ],
+    "date": [
+      {
+        "file": "start.sh",
+        "line": 45
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 41
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 372
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 928
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 953
+      }
+    ],
+    "dc": [],
+    "dd": [
+      {
+        "file": "active-tools.sh",
+        "line": 20546
+      },
+      {
+        "file": "tools.sh",
+        "line": 20552
+      },
+      {
+        "file": "dex_check.sh",
+        "line": 737
+      }
+    ],
+    "deallocvt": [],
+    "depmod": [],
+    "devmem": [],
+    "df": [
+      {
+        "file": "active-tools.sh",
+        "line": 20291
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 20295
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 20304
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 20489
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 20517
+      }
+    ],
+    "dhcprelay": [],
+    "diff": [
+      {
+        "file": "active-tools.sh",
+        "line": 31432
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 31438
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 31439
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 31440
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 31441
+      }
+    ],
+    "dirname": [
+      {
+        "file": "active-tools.sh",
+        "line": 11467
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 11472
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 11473
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 11477
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 11600
+      }
+    ],
+    "dmesg": [],
+    "dnsd": [],
+    "dnsdomainname": [],
+    "dos2unix": [],
+    "du": [
+      {
+        "file": "active-tools.sh",
+        "line": 9676
+      },
+      {
+        "file": "tools.sh",
+        "line": 9677
+      }
+    ],
+    "dumpkmap": [],
+    "dumpleases": [],
+    "echo": [
+      {
+        "file": "start.sh",
+        "line": 16
+      },
+      {
+        "file": "start.sh",
+        "line": 30
+      },
+      {
+        "file": "start.sh",
+        "line": 34
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 3
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 372
+      }
+    ],
+    "ed": [],
+    "egrep": [],
+    "eject": [],
+    "env": [
+      {
+        "file": "active-tools.sh",
+        "line": 16145
+      },
+      {
+        "file": "tools.sh",
+        "line": 16150
+      }
+    ],
+    "ether-wake": [],
+    "expand": [],
+    "expr": [],
+    "factor": [],
+    "fakeidentd": [],
+    "fallocate": [],
+    "false": [
+      {
+        "file": "active-tools.sh",
+        "line": 1239
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1888
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1951
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4053
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 5045
+      }
+    ],
+    "fatattr": [],
+    "fbset": [],
+    "fbsplash": [],
+    "fdflush": [],
+    "fdformat": [],
+    "fdisk": [],
+    "fgconsole": [],
+    "fgrep": [],
+    "find": [
+      {
+        "file": "active-tools.sh",
+        "line": 4886
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4888
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4926
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4928
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4960
+      }
+    ],
+    "findfs": [],
+    "flash_eraseall": [],
+    "flash_lock": [],
+    "flash_unlock": [],
+    "flock": [],
+    "fold": [],
+    "free": [],
+    "freeramdisk": [],
+    "fsck": [],
+    "fsck.minix": [],
+    "fsfreeze": [],
+    "fstrim": [],
+    "fsync": [],
+    "ftpd": [],
+    "ftpget": [],
+    "ftpput": [],
+    "fuser": [],
+    "getenforce": [
+      {
+        "file": "active-tools.sh",
+        "line": 16488
+      },
+      {
+        "file": "tools.sh",
+        "line": 16493
+      }
+    ],
+    "getopt": [],
+    "grep": [
+      {
+        "file": "active-tools.sh",
+        "line": 1987
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 2043
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 2058
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4364
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4861
+      }
+    ],
+    "groups": [],
+    "gunzip": [],
+    "gzip": [],
+    "hd": [],
+    "hdparm": [],
+    "head": [
+      {
+        "file": "active-tools.sh",
+        "line": 3991
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4173
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 6699
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 7666
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 8223
+      }
+    ],
+    "hexdump": [],
+    "hexedit": [],
+    "hostname": [],
+    "httpd": [],
+    "hush": [],
+    "hwclock": [],
+    "id": [
+      {
+        "file": "active-tools.sh",
+        "line": 381
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 6036
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 9908
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 16597
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 16604
+      }
+    ],
+    "ifconfig": [
+      {
+        "file": "active-tools.sh",
+        "line": 11242
+      },
+      {
+        "file": "tools.sh",
+        "line": 11246
+      }
+    ],
+    "ifdown": [],
+    "ifenslave": [],
+    "ifplugd": [],
+    "ifup": [],
+    "inetd": [],
+    "inotifyd": [],
+    "insmod": [],
+    "install": [
+      {
+        "file": "active-tools.sh",
+        "line": 1501
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1549
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 16722
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 16723
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 16724
+      }
+    ],
+    "ionice": [],
+    "iostat": [],
+    "ip": [
+      {
+        "file": "active-tools.sh",
+        "line": 4093
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4107
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4122
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 8493
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 11241
+      }
+    ],
+    "ipaddr": [
+      {
+        "file": "active-tools.sh",
+        "line": 4091
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4093
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4102
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4103
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4117
+      }
+    ],
+    "ipcalc": [],
+    "ipcrm": [],
+    "ipcs": [],
+    "iplink": [],
+    "ipneigh": [],
+    "iproute": [],
+    "iprule": [],
+    "iptunnel": [],
+    "kbd_mode": [],
+    "kill": [
+      {
+        "file": "active-tools.sh",
+        "line": 140
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 167
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 586
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1133
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1134
+      }
+    ],
+    "killall": [],
+    "killall5": [],
+    "klogd": [],
+    "less": [],
+    "link": [
+      {
+        "file": "dex_check.sh",
+        "line": 810
+      }
+    ],
+    "ln": [
+      {
+        "file": "active-tools.sh",
+        "line": 8077
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 8107
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 8674
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 20804
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 22288
+      }
+    ],
+    "loadfont": [],
+    "loadkmap": [],
+    "logread": [],
+    "losetup": [],
+    "ls": [
+      {
+        "file": "active-tools.sh",
+        "line": 341
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 5931
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 9675
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 9988
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 12055
+      }
+    ],
+    "lsattr": [],
+    "lsmod": [],
+    "lsof": [],
+    "lspci": [],
+    "lsscsi": [],
+    "lsusb": [],
+    "lzcat": [],
+    "lzma": [],
+    "lzop": [],
+    "lzopcat": [],
+    "makedevs": [],
+    "makemime": [],
+    "man": [],
+    "md5sum": [
+      {
+        "file": "active-tools.sh",
+        "line": 11472
+      },
+      {
+        "file": "tools.sh",
+        "line": 11476
+      }
+    ],
+    "mesg": [],
+    "microcom": [],
+    "mim": [],
+    "mkdir": [
+      {
+        "file": "start.sh",
+        "line": 41
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 196
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 203
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 304
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 357
+      }
+    ],
+    "mke2fs": [],
+    "mkfifo": [
+      {
+        "file": "active-tools.sh",
+        "line": 626
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 8571
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 12211
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 12218
+      },
+      {
+        "file": "tools.sh",
+        "line": 622
+      }
+    ],
+    "mkfs.ext2": [],
+    "mknod": [],
+    "mkswap": [],
+    "mktemp": [
+      {
+        "file": "active-tools.sh",
+        "line": 1610
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 2283
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 6427
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 9118
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 14266
+      }
+    ],
+    "modinfo": [],
+    "modprobe": [],
+    "more": [],
+    "mount": [
+      {
+        "file": "active-tools.sh",
+        "line": 20512
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 20575
+      },
+      {
+        "file": "tools.sh",
+        "line": 20518
+      },
+      {
+        "file": "tools.sh",
+        "line": 20581
+      }
+    ],
+    "mountpoint": [],
+    "mpstat": [],
+    "mv": [
+      {
+        "file": "active-tools.sh",
+        "line": 780
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 2383
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 2442
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 7801
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 7971
+      }
+    ],
+    "nameif": [],
+    "nanddump": [],
+    "nandwrite": [],
+    "nbd-client": [],
+    "nc": [
+      {
+        "file": "active-tools.sh",
+        "line": 10612
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 10617
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 10620
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 10621
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 10624
+      }
+    ],
+    "netstat": [],
+    "nice": [],
+    "nl": [],
+    "nmeter": [],
+    "nohup": [
+      {
+        "file": "active-tools.sh",
+        "line": 2721
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 2733
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 9034
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 9037
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 17250
+      }
+    ],
+    "nologin": [],
+    "nproc": [],
+    "nsenter": [],
+    "nslookup": [],
+    "nuke": [],
+    "od": [],
+    "openvt": [],
+    "partprobe": [],
+    "paste": [
+      {
+        "file": "active-tools.sh",
+        "line": 33694
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 35465
+      },
+      {
+        "file": "tools.sh",
+        "line": 33700
+      },
+      {
+        "file": "tools.sh",
+        "line": 35471
+      }
+    ],
+    "patch": [
+      {
+        "file": "tools.sh",
+        "line": 1055
+      },
+      {
+        "file": "tools.sh",
+        "line": 20146
+      },
+      {
+        "file": "tools.sh",
+        "line": 20165
+      },
+      {
+        "file": "tools.sh",
+        "line": 20168
+      },
+      {
+        "file": "tools.sh",
+        "line": 20227
+      }
+    ],
+    "pgrep": [],
+    "pidof": [],
+    "ping": [
+      {
+        "file": "active-tools.sh",
+        "line": 17208
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 17617
+      },
+      {
+        "file": "tools.sh",
+        "line": 17213
+      },
+      {
+        "file": "tools.sh",
+        "line": 17622
+      }
+    ],
+    "ping6": [],
+    "pipe_progress": [],
+    "pivot_root": [],
+    "pkill": [],
+    "pmap": [],
+    "popmaildir": [],
+    "powertop": [],
+    "printenv": [],
+    "printf": [
+      {
+        "file": "start.sh",
+        "line": 64
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 18
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 205
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 305
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 412
+      }
+    ],
+    "ps": [
+      {
+        "file": "active-tools.sh",
+        "line": 10457
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 10458
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 18844
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 31616
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 31618
+      }
+    ],
+    "pscan": [],
+    "pstree": [],
+    "pwd": [
+      {
+        "file": "start.sh",
+        "line": 14
+      },
+      {
+        "file": "start.sh",
+        "line": 20
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 10728
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 10795
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 10797
+      }
+    ],
+    "pwdx": [],
+    "raidautorun": [],
+    "rdate": [],
+    "rdev": [],
+    "readlink": [
+      {
+        "file": "active-tools.sh",
+        "line": 624
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 20246
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 32564
+      },
+      {
+        "file": "tools.sh",
+        "line": 620
+      },
+      {
+        "file": "tools.sh",
+        "line": 20252
+      }
+    ],
+    "readprofile": [],
+    "realpath": [],
+    "reformime": [],
+    "renice": [
+      {
+        "file": "active-tools.sh",
+        "line": 8748
+      },
+      {
+        "file": "tools.sh",
+        "line": 8749
+      }
+    ],
+    "reset": [
+      {
+        "file": "active-tools.sh",
+        "line": 12314
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 16907
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 32119
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 32231
+      },
+      {
+        "file": "tools.sh",
+        "line": 12318
+      }
+    ],
+    "resize": [],
+    "resume": [
+      {
+        "file": "active-tools.sh",
+        "line": 732
+      },
+      {
+        "file": "tools.sh",
+        "line": 728
+      }
+    ],
+    "rev": [
+      {
+        "file": "active-tools.sh",
+        "line": 34507
+      },
+      {
+        "file": "tools.sh",
+        "line": 34513
+      }
+    ],
+    "rfkill": [],
+    "rm": [
+      {
+        "file": "active-tools.sh",
+        "line": 97
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 125
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 144
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 187
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 263
+      }
+    ],
+    "rmdir": [
+      {
+        "file": "active-tools.sh",
+        "line": 154
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 2690
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 2837
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 2846
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 2854
+      }
+    ],
+    "rmmod": [],
+    "route": [
+      {
+        "file": "active-tools.sh",
+        "line": 4093
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 8493
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 8618
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 10694
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 10707
+      }
+    ],
+    "rtcwake": [],
+    "run-init": [],
+    "run-parts": [],
+    "runcon": [],
+    "rx": [],
+    "script": [
+      {
+        "file": "start.sh",
+        "line": 30
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 13
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 374
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1058
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 11450
+      }
+    ],
+    "scriptreplay": [],
+    "sed": [
+      {
+        "file": "start.sh",
+        "line": 64
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 470
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 477
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 481
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1066
+      }
+    ],
+    "seedrng": [],
+    "selinuxenabled": [],
+    "sendmail": [],
+    "seq": [
+      {
+        "file": "active-tools.sh",
+        "line": 11283
+      },
+      {
+        "file": "tools.sh",
+        "line": 11287
+      }
+    ],
+    "sestatus": [],
+    "setconsole": [],
+    "setenforce": [],
+    "setfattr": [],
+    "setfont": [],
+    "setkeycodes": [],
+    "setlogcons": [],
+    "setpriv": [],
+    "setserial": [],
+    "setsid": [],
+    "setuidgid": [],
+    "sh": [
+      {
+        "file": "active-tools.sh",
+        "line": 18903
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 19402
+      },
+      {
+        "file": "tools.sh",
+        "line": 18909
+      },
+      {
+        "file": "tools.sh",
+        "line": 19408
+      }
+    ],
+    "sha1sum": [],
+    "sha256sum": [
+      {
+        "file": "active-tools.sh",
+        "line": 4185
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 8035
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 8036
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 9555
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 9576
+      }
+    ],
+    "sha3sum": [],
+    "sha512sum": [],
+    "showkey": [],
+    "shred": [],
+    "shuf": [],
+    "slattach": [],
+    "sleep": [
+      {
+        "file": "active-tools.sh",
+        "line": 1135
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1168
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 2658
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 3309
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 3312
+      }
+    ],
+    "smemcap": [],
+    "sort": [
+      {
+        "file": "active-tools.sh",
+        "line": 4933
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4954
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4960
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 7445
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 7449
+      }
+    ],
+    "split": [
+      {
+        "file": "active-tools.sh",
+        "line": 3123
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 3124
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 3125
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 3126
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 3127
+      }
+    ],
+    "ssl_client": [],
+    "start-stop-daemon": [],
+    "stat": [
+      {
+        "file": "active-tools.sh",
+        "line": 30
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 541
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 776
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1609
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1625
+      }
+    ],
+    "strings": [],
+    "stty": [],
+    "sum": [],
+    "svc": [],
+    "svok": [],
+    "swapoff": [],
+    "swapon": [],
+    "switch_root": [],
+    "sync": [],
+    "sysctl": [],
+    "syslogd": [],
+    "tac": [],
+    "tail": [
+      {
+        "file": "active-tools.sh",
+        "line": 4364
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4861
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 6950
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 6956
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 13173
+      }
+    ],
+    "tar": [
+      {
+        "file": "active-tools.sh",
+        "line": 1062
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1402
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1403
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1404
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1406
+      }
+    ],
+    "tc": [],
+    "tcpsvd": [],
+    "tee": [],
+    "telnet": [],
+    "telnetd": [],
+    "test": [
+      {
+        "file": "active-tools.sh",
+        "line": 9212
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 9214
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 9220
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 10667
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 17358
+      }
+    ],
+    "tftp": [],
+    "tftpd": [],
+    "time": [
+      {
+        "file": "active-tools.sh",
+        "line": 372
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 996
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1055
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 5900
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 5918
+      }
+    ],
+    "timeout": [
+      {
+        "file": "active-tools.sh",
+        "line": 8143
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 8144
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 8156
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 8157
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 8385
+      }
+    ],
+    "top": [
+      {
+        "file": "active-tools.sh",
+        "line": 1507
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1547
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 11762
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 11763
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 11764
+      }
+    ],
+    "touch": [
+      {
+        "file": "active-tools.sh",
+        "line": 22426
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 22438
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 22462
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 22592
+      },
+      {
+        "file": "tools.sh",
+        "line": 22432
+      }
+    ],
+    "tr": [
+      {
+        "file": "active-tools.sh",
+        "line": 120
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 168
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 477
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 481
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 2326
+      }
+    ],
+    "traceroute": [],
+    "traceroute6": [],
+    "tree": [
+      {
+        "file": "active-tools.sh",
+        "line": 10684
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 10707
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 10804
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 10951
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 11549
+      }
+    ],
+    "true": [
+      {
+        "file": "start.sh",
+        "line": 64
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 121
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 123
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 160
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 197
+      }
+    ],
+    "truncate": [],
+    "ts": [
+      {
+        "file": "active-tools.sh",
+        "line": 9982
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 19358
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 19400
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 20189
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 31432
+      }
+    ],
+    "tsort": [],
+    "tty": [
+      {
+        "file": "active-tools.sh",
+        "line": 809
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 816
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 839
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 7118
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 7721
+      }
+    ],
+    "ttysize": [],
+    "tunctl": [],
+    "tune2fs": [],
+    "ubiattach": [],
+    "ubidetach": [],
+    "ubimkvol": [],
+    "ubirename": [],
+    "ubirmvol": [],
+    "ubirsvol": [],
+    "ubiupdatevol": [],
+    "udhcpc": [],
+    "udhcpc6": [],
+    "udhcpd": [],
+    "udpsvd": [],
+    "uevent": [],
+    "umount": [],
+    "uname": [
+      {
+        "file": "active-tools.sh",
+        "line": 16488
+      },
+      {
+        "file": "tools.sh",
+        "line": 16493
+      }
+    ],
+    "uncompress": [],
+    "unexpand": [],
+    "uniq": [
+      {
+        "file": "active-tools.sh",
+        "line": 27665
+      },
+      {
+        "file": "tools.sh",
+        "line": 27671
+      }
+    ],
+    "unix2dos": [],
+    "unlink": [],
+    "unlzma": [],
+    "unlzop": [],
+    "unshare": [],
+    "unxz": [],
+    "unzip": [
+      {
+        "file": "active-tools.sh",
+        "line": 19446
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 19821
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 19830
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 19945
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 19946
+      }
+    ],
+    "uptime": [
+      {
+        "file": "active-tools.sh",
+        "line": 748
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 5941
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 5986
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 16410
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 16411
+      }
+    ],
+    "usleep": [
+      {
+        "file": "active-tools.sh",
+        "line": 7948
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 7949
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 7952
+      },
+      {
+        "file": "tools.sh",
+        "line": 7949
+      },
+      {
+        "file": "tools.sh",
+        "line": 7950
+      }
+    ],
+    "uudecode": [],
+    "uuencode": [],
+    "vconfig": [],
+    "vi": [],
+    "volname": [],
+    "watch": [],
+    "watchdog": [],
+    "wc": [
+      {
+        "file": "active-tools.sh",
+        "line": 1416
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1474
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 1530
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4878
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4956
+      }
+    ],
+    "wget": [],
+    "which": [
+      {
+        "file": "active-tools.sh",
+        "line": 7801
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 9715
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 9721
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 9727
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 9733
+      }
+    ],
+    "whoami": [
+      {
+        "file": "active-tools.sh",
+        "line": 2
+      },
+      {
+        "file": "tools.sh",
+        "line": 2
+      }
+    ],
+    "whois": [],
+    "xargs": [
+      {
+        "file": "active-tools.sh",
+        "line": 11127
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 17001
+      },
+      {
+        "file": "tools.sh",
+        "line": 11131
+      },
+      {
+        "file": "tools.sh",
+        "line": 17006
+      }
+    ],
+    "xxd": [],
+    "xz": [],
+    "xzcat": [],
+    "yes": [
+      {
+        "file": "active-tools.sh",
+        "line": 311
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 4139
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 7638
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 16111
+      },
+      {
+        "file": "active-tools.sh",
+        "line": 16203
+      }
+    ],
+    "zcat": [],
+    "zcip": []
+  },
+  "selection_method": "Broad non-comment name scan followed by manual call/context review; tree-sitter used as supplementary evidence only because mksh syntax caused parse recovery errors.",
+  "profile_name": "speedbackup-ziponly-unicode",
+  "kept_reasons": {
+    "[": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "start.sh",
+          "line": 9
+        },
+        {
+          "file": "start.sh",
+          "line": 13
+        },
+        {
+          "file": "start.sh",
+          "line": 15
+        },
+        {
+          "file": "start.sh",
+          "line": 29
+        },
+        {
+          "file": "start.sh",
+          "line": 33
+        }
+      ]
+    },
+    "[[": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 18
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 42
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 84
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 96
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 101
+        }
+      ]
+    },
+    "ash": {
+      "reason": "Implements sh; keeps the original Android shell and standalone patches.",
+      "text_references": []
+    },
+    "awk": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 341
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 900
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 1978
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 1994
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 2009
+        }
+      ]
+    },
+    "basename": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 1029
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 1411
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 11601
+        },
+        {
+          "file": "tools.sh",
+          "line": 1025
+        },
+        {
+          "file": "tools.sh",
+          "line": 1408
+        }
+      ]
+    },
+    "cat": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 183
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 215
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 258
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 532
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 728
+        }
+      ]
+    },
+    "chcon": {
+      "reason": "Required observed call; retained even though absent from the supplied 118-applet sample.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 4790
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 4792
+        },
+        {
+          "file": "tools.sh",
+          "line": 4791
+        },
+        {
+          "file": "tools.sh",
+          "line": 4793
+        }
+      ]
+    },
+    "chmod": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 197
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 204
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 265
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 2225
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 2382
+        }
+      ]
+    },
+    "chown": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 198
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 17603
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 29365
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 29373
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 29704
+        }
+      ]
+    },
+    "cksum": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 11473
+        },
+        {
+          "file": "tools.sh",
+          "line": 11477
+        }
+      ]
+    },
+    "clear": {
+      "reason": "Terminal refresh at active-tools.sh:9644.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 9644
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 29547
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 30305
+        },
+        {
+          "file": "tools.sh",
+          "line": 9645
+        },
+        {
+          "file": "tools.sh",
+          "line": 29553
+        }
+      ]
+    },
+    "cmp": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 1572
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 2096
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 7829
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 8034
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 12702
+        }
+      ]
+    },
+    "comm": {
+      "reason": "Required observed call; retained even though absent from the supplied 118-applet sample.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 15441
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 15442
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 30855
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 30856
+        },
+        {
+          "file": "tools.sh",
+          "line": 15446
+        }
+      ]
+    },
+    "cp": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 123
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 698
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 4777
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 5098
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 5654
+        }
+      ]
+    },
+    "cut": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 120
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 477
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 481
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 4326
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 4334
+        }
+      ]
+    },
+    "date": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "start.sh",
+          "line": 45
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 41
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 372
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 928
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 953
+        }
+      ]
+    },
+    "dd": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 20546
+        },
+        {
+          "file": "tools.sh",
+          "line": 20552
+        },
+        {
+          "file": "dex_check.sh",
+          "line": 737
+        }
+      ]
+    },
+    "df": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 20291
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 20295
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 20304
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 20489
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 20517
+        }
+      ]
+    },
+    "dirname": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 11467
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 11472
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 11473
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 11477
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 11600
+        }
+      ]
+    },
+    "du": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 9676
+        },
+        {
+          "file": "tools.sh",
+          "line": 9677
+        }
+      ]
+    },
+    "echo": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "start.sh",
+          "line": 16
+        },
+        {
+          "file": "start.sh",
+          "line": 30
+        },
+        {
+          "file": "start.sh",
+          "line": 34
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 3
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 372
+        }
+      ]
+    },
+    "getenforce": {
+      "reason": "Required observed call; retained even though absent from the supplied 118-applet sample.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 16488
+        },
+        {
+          "file": "tools.sh",
+          "line": 16493
+        }
+      ]
+    },
+    "grep": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 1987
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 2043
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 2058
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 4364
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 4861
+        }
+      ]
+    },
+    "head": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 3991
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 4173
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 6699
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 7666
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 8223
+        }
+      ]
+    },
+    "id": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 381
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 6036
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 9908
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 16597
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 16604
+        }
+      ]
+    },
+    "ifconfig": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 11242
+        },
+        {
+          "file": "tools.sh",
+          "line": 11246
+        }
+      ]
+    },
+    "ip": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 4093
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 4107
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 4122
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 8493
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 11241
+        }
+      ]
+    },
+    "kill": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 140
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 167
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 586
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 1133
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 1134
+        }
+      ]
+    },
+    "ln": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 8077
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 8107
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 8674
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 20804
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 22288
+        }
+      ]
+    },
+    "ls": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 341
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 5931
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 9675
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 9988
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 12055
+        }
+      ]
+    },
+    "md5sum": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 11472
+        },
+        {
+          "file": "tools.sh",
+          "line": 11476
+        }
+      ]
+    },
+    "mkdir": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "start.sh",
+          "line": 41
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 196
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 203
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 304
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 357
+        }
+      ]
+    },
+    "mkfifo": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 626
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 8571
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 12211
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 12218
+        },
+        {
+          "file": "tools.sh",
+          "line": 622
+        }
+      ]
+    },
+    "mktemp": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 1610
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 2283
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 6427
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 9118
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 14266
+        }
+      ]
+    },
+    "mount": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 20512
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 20575
+        },
+        {
+          "file": "tools.sh",
+          "line": 20518
+        },
+        {
+          "file": "tools.sh",
+          "line": 20581
+        }
+      ]
+    },
+    "mv": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 780
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 2383
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 2442
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 7801
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 7971
+        }
+      ]
+    },
+    "nc": {
+      "reason": "Required observed call; retained even though absent from the supplied 118-applet sample.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 10612
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 10617
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 10620
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 10621
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 10624
+        }
+      ]
+    },
+    "nohup": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 2721
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 2733
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 9034
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 9037
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 17250
+        }
+      ]
+    },
+    "paste": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 33694
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 35465
+        },
+        {
+          "file": "tools.sh",
+          "line": 33700
+        },
+        {
+          "file": "tools.sh",
+          "line": 35471
+        }
+      ]
+    },
+    "printf": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "start.sh",
+          "line": 64
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 18
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 205
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 305
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 412
+        }
+      ]
+    },
+    "ps": {
+      "reason": "Process diagnostics plus variable-selected fallback from /system/bin/ps.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 10457
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 10458
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 18844
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 31616
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 31618
+        }
+      ]
+    },
+    "pwd": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "start.sh",
+          "line": 14
+        },
+        {
+          "file": "start.sh",
+          "line": 20
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 10728
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 10795
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 10797
+        }
+      ]
+    },
+    "readlink": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 624
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 20246
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 32564
+        },
+        {
+          "file": "tools.sh",
+          "line": 620
+        },
+        {
+          "file": "tools.sh",
+          "line": 20252
+        }
+      ]
+    },
+    "renice": {
+      "reason": "Explicit \"$busybox\" renice -5 -p PID fallback at active-tools.sh:8748.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 8748
+        },
+        {
+          "file": "tools.sh",
+          "line": 8749
+        }
+      ]
+    },
+    "rev": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 34507
+        },
+        {
+          "file": "tools.sh",
+          "line": 34513
+        }
+      ]
+    },
+    "rm": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 97
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 125
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 144
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 187
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 263
+        }
+      ]
+    },
+    "rmdir": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 154
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 2690
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 2837
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 2846
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 2854
+        }
+      ]
+    },
+    "sed": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "start.sh",
+          "line": 64
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 470
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 477
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 481
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 1066
+        }
+      ]
+    },
+    "seq": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 11283
+        },
+        {
+          "file": "tools.sh",
+          "line": 11287
+        }
+      ]
+    },
+    "sh": {
+      "reason": "Runs dex_check.sh and checks update shell syntax; active-tools.sh:18903,19402.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 18903
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 19402
+        },
+        {
+          "file": "tools.sh",
+          "line": 18909
+        },
+        {
+          "file": "tools.sh",
+          "line": 19408
+        }
+      ]
+    },
+    "sha256sum": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 4185
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 8035
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 8036
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 9555
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 9576
+        }
+      ]
+    },
+    "sleep": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 1135
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 1168
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 2658
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 3309
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 3312
+        }
+      ]
+    },
+    "sort": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 4933
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 4954
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 4960
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 7445
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 7449
+        }
+      ]
+    },
+    "stat": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 30
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 541
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 776
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 1609
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 1625
+        }
+      ]
+    },
+    "tail": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 4364
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 4861
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 6950
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 6956
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 13173
+        }
+      ]
+    },
+    "test": {
+      "reason": "Shared predicate implementation and standard alias retained with [ and [[.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 9212
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 9214
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 9220
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 10667
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 17358
+        }
+      ]
+    },
+    "timeout": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 8143
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 8144
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 8156
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 8157
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 8385
+        }
+      ]
+    },
+    "touch": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 22426
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 22438
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 22462
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 22592
+        },
+        {
+          "file": "tools.sh",
+          "line": 22432
+        }
+      ]
+    },
+    "tr": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 120
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 168
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 477
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 481
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 2326
+        }
+      ]
+    },
+    "true": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "start.sh",
+          "line": 64
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 121
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 123
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 160
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 197
+        }
+      ]
+    },
+    "uname": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 16488
+        },
+        {
+          "file": "tools.sh",
+          "line": 16493
+        }
+      ]
+    },
+    "uniq": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 27665
+        },
+        {
+          "file": "tools.sh",
+          "line": 27671
+        }
+      ]
+    },
+    "unzip": {
+      "reason": "Required for update ZIP list, streaming read and extraction.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 19446
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 19821
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 19830
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 19945
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 19946
+        }
+      ]
+    },
+    "usleep": {
+      "reason": "Required observed call; retained even though absent from the supplied 118-applet sample.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 7948
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 7949
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 7952
+        },
+        {
+          "file": "tools.sh",
+          "line": 7949
+        },
+        {
+          "file": "tools.sh",
+          "line": 7950
+        }
+      ]
+    },
+    "wc": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 1416
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 1474
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 1530
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 4878
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 4956
+        }
+      ]
+    },
+    "which": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 7801
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 9715
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 9721
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 9727
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 9733
+        }
+      ]
+    },
+    "whoami": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 2
+        },
+        {
+          "file": "tools.sh",
+          "line": 2
+        }
+      ]
+    },
+    "xargs": {
+      "reason": "Referenced command or shell predicate in reviewed backup/update/diagnostic paths.",
+      "text_references": [
+        {
+          "file": "active-tools.sh",
+          "line": 11127
+        },
+        {
+          "file": "active-tools.sh",
+          "line": 17001
+        },
+        {
+          "file": "tools.sh",
+          "line": 11131
+        },
+        {
+          "file": "tools.sh",
+          "line": 17006
+        }
+      ]
+    }
+  },
+  "excluded_text_hits": {
+    "diff": "Elapsed-time variable, not a command.",
+    "env": "Log field, not an env command.",
+    "false": "Boolean values and case patterns; no external false invocation. Shell builtin remains.",
+    "install": "Android PackageManager operation and messages, not BusyBox install.",
+    "ipaddr": "Shell variable; ip addr is retained through the ip applet.",
+    "link": "Fixture path; symlinks use ln.",
+    "patch": "Build identifier in diagnostic messages.",
+    "ping": "Root/installer daemon protocol request, not an ICMP command.",
+    "reset": "Script function argument and network error messages.",
+    "resume": "Argument to the native tty-relay-barrier operation.",
+    "route": "ip route subcommand and messages; ip route support remains enabled.",
+    "script": "Variable and log field; no terminal-recording command.",
+    "split": "AWK/jq functions and split APK messages.",
+    "time": "Log/JSON field; timing uses date, /proc/uptime and native tools.",
+    "top": "Variable and Android activity/process-state messages.",
+    "tree": "SMB messages and native tool operations.",
+    "ts": "Shell translation function backed by DEX, not BusyBox timestamp.",
+    "tty": "/dev/tty device path, not a tty command.",
+    "uptime": "/proc/uptime data source, not an uptime command.",
+    "yes": "Configuration values and case patterns."
+  },
+  "external_providers": {
+    "tar": {
+      "provider": "Bundled tools/tar (GNU tar)",
+      "reason": "Core SHA-checked tool; installer explicitly skips BusyBox tar symlink.",
+      "references": [
+        "active-tools.sh:8106",
+        "active-tools.sh:9519"
+      ]
+    },
+    "find": {
+      "provider": "Bundled tools/find",
+      "reason": "Core SHA-checked real executable; BusyBox installer does not replace existing files. GNU-specific -printf is used.",
+      "references": [
+        "active-tools.sh:5398",
+        "active-tools.sh:8106",
+        "active-tools.sh:9519"
+      ]
+    }
+  },
+  "limitations": [
+    "Static review does not prove runtime coverage or future script compatibility.",
+    "Custom hooks and unrelated module/release-maintenance scripts are outside this profile.",
+    "Requires the existing complete companion tool set, including GNU tar/find, zstd, jq, smbclient, speednative and DEX."
+  ],
+  "zip_methods": [
+    "store",
+    "deflate"
+  ],
+  "disabled_config": [
+    "CONFIG_FEATURE_UNZIP_BZIP2",
+    "CONFIG_FEATURE_UNZIP_LZMA",
+    "CONFIG_FEATURE_UNZIP_XZ",
+    "CONFIG_FEATURE_SEAMLESS_BZ2",
+    "CONFIG_FEATURE_SEAMLESS_LZMA",
+    "CONFIG_FEATURE_SEAMLESS_XZ",
+    "CONFIG_FEATURE_COMPRESS_USAGE",
+    "CONFIG_FEATURE_COMPRESS_BBCONFIG",
+    "CONFIG_FEATURE_SH_EMBEDDED_SCRIPTS",
+    "CONFIG_FEATURE_BZIP2_DECOMPRESS",
+    "CONFIG_BZIP2",
+    "CONFIG_BUNZIP2",
+    "CONFIG_BZCAT",
+    "CONFIG_LZMA",
+    "CONFIG_UNLZMA",
+    "CONFIG_LZCAT",
+    "CONFIG_XZ",
+    "CONFIG_UNXZ",
+    "CONFIG_XZCAT",
+    "CONFIG_LOCALE_SUPPORT",
+    "CONFIG_UNICODE_USING_LOCALE",
+    "CONFIG_FEATURE_CHECK_UNICODE_IN_ENV"
+  ],
+  "omitted_decoder_objects": [
+    "busybox/archival/libarchive/decompress_bunzip2.o",
+    "busybox/archival/libarchive/decompress_unlzma.o",
+    "busybox/archival/libarchive/decompress_unxz.o"
+  ],
+  "unicode": {
+    "implementation": "busybox-internal-utf8",
+    "max_code_point": 1114111,
+    "max_code_point_hex": "U+10FFFF",
+    "wide_chars": true,
+    "combining_chars": true,
+    "depends_on_locale_env": false,
+    "width_tables": "BusyBox 1.38.0 (unchanged)"
+  }
+}

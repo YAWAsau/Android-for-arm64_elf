@@ -1,0 +1,7 @@
+* text=auto eol=lf
+# These manifests refer to the original source bytes.
+zstd/upstream/** -text
+tar/upstream/** -text
+busybox/upstream/** -text
+samba/upstream-source/** -text
+*.zip binary
