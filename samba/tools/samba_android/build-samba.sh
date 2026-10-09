@@ -69,7 +69,8 @@ cat > "$SAMBA_HOST_TOOL/include/sys/sysmacros.h" <<'EOF'
 #endif
 EOF
 
-# Select Android arm64's Linux per-thread credential syscalls explicitly.
+# Reapply the Android recipe on every build, including cached source trees.
+# A missing runtime-path patch anchor is fatal under set -e, before Waf runs.
 python3 "$SAMBA_REPO/tools/samba_android/patch-samba.py" "$SAMBA_BUILD_ROOT"
 
 if [ ! -f bin/.android-samba-server-configured ]; then

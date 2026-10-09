@@ -1,4 +1,17 @@
-# 初始整合版
+# 2026-10-09：發布目前 ELF 與最新配方
+
+BusyBox 更新為 kernel getrandom / arc4random 相容版本（929328 bytes），API 28 實機相容性未驗證。其餘八個 ELF 沿用 2026-09-26 產物；Samba 路徑補丁只更新來源，尚未重建。發布清單見 `verification/release-20261009.json`。
+
+# 2026-10-05：Android 暫存路徑補丁
+
+- 以目前 Samba 4.25.0 對照使用者提供的 Android Samba 4.5.1 源碼包，移植適合新版的暫存路徑修正。
+- Android 的 Samba `tmpdir()` 預設改為 `/data/local/tmp`，IPC$ 也沿用此預設；Samba 檔案式 Kerberos 快取及 SMB1 診斷封包改用 `tmpdir()`。
+- 現代 Heimdal `%{TEMP}` 保留安全環境變數讀取，依序使用 `TEMP`、`TMPDIR`、`/data/local/tmp`。只修改 Android 分支。
+- 新增補丁每次編譯前都會執行，支援已套用的來源快取；來源區塊不匹配就報錯中止。成功建置的 metadata 記錄補丁版本及配方 SHA256。
+- 未移植參考包中的身分映射、權限檢查繞過或認證語義修改。現有 ThinLTO 配方不變。
+- 本次只更新源碼建置配方，尚未重新編譯或進行裝置測試；下列初始整合版的建置記錄保留為歷史結果。
+
+# 初始整合版（2026-09-26）
 
 - 整理 zstd、GNU tar、BusyBox、Samba 為四個可獨立使用的源碼目錄；Samba 共用來源建置 smbclient、smbd 和四個 RPC 工具。
 - 外層 `build.ps1` 依序呼叫各專案，全部成功後收集九個 ELF、SHA256 與建置資訊。

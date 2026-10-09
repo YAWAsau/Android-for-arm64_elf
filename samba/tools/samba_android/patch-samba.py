@@ -1,6 +1,28 @@
 from pathlib import Path
 import sys
 
+def apply_exact_patch(relative_path, old, new, label):
+    """Apply once, or stop if an upstream edit needs a reviewed port."""
+    path = Path(sys.argv[1]) / relative_path
+    if not path.is_file():
+        raise SystemExit(
+            f"Android patch '{label}' cannot find {relative_path}. "
+            "Update the patch for this upstream source layout before building."
+        )
+    content = path.read_text(encoding="utf-8")
+    if content.count(new) == 1 and old not in content.replace(new, "", 1):
+        print(f"Android patch already applied: {label}")
+        return
+    if new in content or content.count(old) != 1:
+        raise SystemExit(
+            f"Android patch '{label}' does not match {relative_path}. "
+            "The upstream source or cached tree changed; update the patch "
+            "before building. No patch was skipped."
+        )
+    path.write_text(content.replace(old, new, 1), encoding="utf-8")
+    print(f"Applied Android patch: {label}")
+
+
 source = Path(sys.argv[1]) / "source3" / "wscript"
 # Bionic's generated Linux UAPI header omits the inline speed helper.
 interfaces = Path(sys.argv[1]) / "lib" / "socket" / "interfaces.c"
@@ -247,3 +269,57 @@ if overflow_new not in overflow_text:
     if overflow_old not in overflow_text:
         raise SystemExit('Expected Samba pointer overflow macro was not found')
     overflow_header.write_text(overflow_text.replace(overflow_old, overflow_new, 1), encoding='utf-8')
+
+# Android has no /tmp. Preserve explicit caller paths and the non-Android
+# behavior; IPC$ already obtains its default path through Samba's tmpdir().
+tmpdir_old = '''_PUBLIC_ const char *tmpdir(void)
+{
+	char *p;
+	if ((p = getenv("TMPDIR")))
+		return p;
+	return "/tmp";
+}'''
+tmpdir_new = tmpdir_old.replace(
+    '\treturn "/tmp";',
+    '#ifdef __ANDROID__\n\treturn "/data/local/tmp";\n'
+    '#else\n\treturn "/tmp";\n#endif',
+)
+apply_exact_patch("lib/util/util.c", tmpdir_old, tmpdir_new,
+                  "runtime temporary directory and IPC$ default")
+
+ccache_old = ('\t\t\tccache_name = talloc_asprintf(ccc, "FILE:/tmp/krb5_cc_samba_%u_%p",\n'
+              '\t\t\t\t\t\t      (unsigned int)getpid(), ccc);')
+ccache_new = ('#ifdef __ANDROID__\n'
+              '\t\t\tccache_name = talloc_asprintf(ccc, "FILE:%s/krb5_cc_samba_%u_%p",\n'
+              '\t\t\t\t\t\t      tmpdir(), (unsigned int)getpid(), ccc);\n'
+              '#else\n' + ccache_old + '\n#endif')
+apply_exact_patch("auth/credentials/credentials_krb5.c", ccache_old, ccache_new,
+                  "Samba file credential cache directory")
+
+# Modern Heimdal expands %{TEMP} in lib/base, not the old lib/krb5 wrapper.
+# Keep secure_getenv for privileged-process handling and TEMP precedence.
+heimdal_temp_old = '    p = secure_getenv("TEMP");\n\n    if (p)'
+heimdal_temp_new = '''    p = secure_getenv("TEMP");
+#ifdef __ANDROID__
+    if (p == NULL || p[0] == '\\0')
+        p = secure_getenv("TMPDIR");
+    if (p == NULL || p[0] == '\\0')
+        p = "/data/local/tmp";
+#endif
+
+    if (p)'''
+apply_exact_patch("third_party/heimdal/lib/base/expand_path.c",
+                  heimdal_temp_old, heimdal_temp_new,
+                  "Heimdal secure temporary directory expansion")
+
+dump_old = ('\t\tfname = talloc_asprintf(talloc_tos(),\n'
+            '\t\t\t\t"/tmp/%s.%d.%s",\n'
+            '\t\t\t\tname,\n'
+            '\t\t\t\ti,\n'
+            '\t\t\t\ttype ? "req" : "resp");')
+dump_new = ('#ifdef __ANDROID__\n' + dump_old.replace(
+    '\t\t\t\t"/tmp/%s.%d.%s",\n',
+    '\t\t\t\t"%s/%s.%d.%s",\n\t\t\t\ttmpdir(),\n',
+) + '\n#else\n' + dump_old + '\n#endif')
+apply_exact_patch("source3/smbd/smb1_process.c", dump_old, dump_new,
+                  "SMB1 diagnostic packet dump directory")

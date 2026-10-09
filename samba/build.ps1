@@ -379,6 +379,8 @@ $Command = "set -e; $EnvPrefix; python3 '$CrtScriptPosix'; bash '$CryptoPosix'; 
 Invoke-Checked $MsysBash @('-lc',$Command)
 $BuildMetadata = @{ ndk = 'r30'; ndk_revision = '30.0.16248370'; android_api = 28; target = 'aarch64-linux-android28'; samba_version = $Version; build_profile = $BuildProfile; build_scope = $BuildScope }
 $BuildMetadata.android_ident = 'target-api28-ndkr30; private CRT note override; runtime unchanged'
+$BuildMetadata.android_patchset = 'android-runtime-paths-v1'
+$BuildMetadata.android_patch_recipe_sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $Repo 'tools\samba_android\patch-samba.py')).Hash.ToLowerInvariant()
 if ($BuildProfile -eq 'size') {
     $BuildMetadata.samba_cflags = '-Os -fPIE -ffunction-sections -fdata-sections -flto=thin'
     $BuildMetadata.crypto_cflags = '-O2 -fPIC'

@@ -137,7 +137,9 @@ tar／zstd 每次都重新編譯；BusyBox 依配置及補丁雜湊管理快取�
 
 tar／zstd 取自目前 `android_build_sync63/source/` 的乾淨來源，BusyBox 取自 `busybox_android/` 的 Unicode 修正版。Samba 的腳本、來源包出處及原始雜湊記錄在 `samba/ORIGIN.json`。本次調整建置入口參數、來源包使用及外層輸出收集；上游來源與編譯旗標沿用各自原配方。
 
-## 本機建置驗證
+## 本機建置驗證（2026-09-26 基準版本）
+
+2026-10-05 新增的 Samba Android 暫存路徑補丁已納入每次建置的補丁流程，**本次尚未重新編譯或進行裝置測試**。下列結果及 `verification/` 記錄對應 2026-09-26 的基準版本；新補丁說明見 [samba/ANDROID-PATCHES.md](samba/ANDROID-PATCHES.md)。
 
 **已在 Windows PowerShell 5.1 實際執行外層 `build.ps1`，四個專案與九個二進位全部建置成功，退出碼為 0。** 首次使用新的獨立工作目錄建置，修正 GPG／UCRT64 問題後，再由外層入口完整重跑；重跑沿用本次建立的依賴快取。
 
@@ -154,3 +156,7 @@ Samba 執行了原有的 ADB configure 探測與備用機上的 `smbclient --ver
 本次新增的建置整合程式與文件採 **GPL-3.0-only**，全文見 `LICENSE`；上游程式各自保留原授權。範圍與第三方聲明見 [LICENSING.md](LICENSING.md)。
 
 原授權隨各來源保留：zstd 的 `upstream/LICENSE` 與 `upstream/COPYING`；tar 的 `upstream/COPYING`；BusyBox 的 `LICENSE-BusyBox.txt` 及來源壓縮包；Samba 和加密依賴的授權位於 `upstream-source/` 原始壓縮包。BusyBox 的 libselinux、PCRE2 及 Android 補丁來源亦隨包提供。
+
+## 目前下載
+
+[2026-10-09 ELF 與完整來源包](https://github.com/YAWAsau/Android-for-arm64_elf/releases/tag/elf-20261009-r30-api28)。BusyBox 為新產物，其餘八個 ELF 沿用 2026-09-26 版本；Samba 新增路徑補丁尚未編入本次產物。API 28 實機相容性未驗證。

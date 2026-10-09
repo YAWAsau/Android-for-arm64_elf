@@ -47,6 +47,14 @@ omitting the Android fixes.
 Source modifications are reproducible in `patch-samba.py`: Android credential
 syscalls, tagged-pointer bounds arithmetic, nullable Android passwd fields,
 static loader fallbacks, RPC dependency normalization and local host generators.
+The recipe runs before Waf on every invocation, including cached builds.
+The Android runtime-path additions use `/data/local/tmp` by default for Samba's
+temporary directory (also used by IPC$), file credential caches and diagnostic
+packet dumps. Heimdal keeps `secure_getenv` and uses TEMP, then TMPDIR, then the
+Android default. Explicit overrides and non-Android behavior are preserved.
+These additions require exact, unique source anchors or an already-applied
+block; otherwise the recipe exits with an error before compilation. See
+`../../ANDROID-PATCHES.md` for the porting decisions.
 Unused linker sections are removed with safe identical-code folding. ELF output
 is rejected if it contains PT_INTERP or DT_NEEDED. Dependencies and their pinned
 signature fingerprints are in `build.ps1`.
@@ -64,12 +72,15 @@ Use `-BuildProfile standard` for the previous `-O2` configuration and
 (`netwatch`, `propwait`, `ntlmhash`) are preserved; they are not Samba build targets.
 
 This build script targets ARM64 Android using API 28 and NDK r30 (30.0.16248370).
-The integrated kit has built all six outputs locally with Windows PowerShell 5.1.
+The 2026-09-26 integrated kit built all six outputs locally with Windows PowerShell 5.1.
 Static ELF checks, the original ADB configure probes and smbclient --version on
 the ARM64 spare phone passed. A complete SMB server functional run was not
 performed for these r30 outputs. See the outer verification directory for exact
 hashes and scope. LAN guards and service lifecycle are managed by your separately maintained module.
-`build-metadata.json` records the compiler target and pinned NDK revision.
+The 2026-10-05 runtime-path additions have not yet been rebuilt or device-tested;
+the verification directory records the earlier baseline only.
+`build-metadata.json` records the compiler target, pinned NDK revision,
+`android_patchset` and the SHA256 of `patch-samba.py` used for the build.
 The TDB library falls back to file locks because Bionic lacks robust mutexes;
 its fallback diagnostic can appear in the log.
 

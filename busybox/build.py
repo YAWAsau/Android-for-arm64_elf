@@ -14,7 +14,7 @@ import urllib.request
 
 ROOT = Path(__file__).resolve().parent
 REVISION = '30.0.16248370'
-RECIPE_FILES = ('build.py', 'generate.sh', 'generate-makefile.py',
+RECIPE_FILES = ('build.py', 'generate.sh', 'generate-makefile.py', 'arc4random_kernel.c', 'prepare_compat_libc.py',
                 'config/android.config', 'config/reference-applets.txt',
                 'config/removed-applets.txt', 'config/keep-applets.txt',
                 'config/profile.json', 'patches/android-1.38.patch')
@@ -184,6 +184,12 @@ APP_SUPPORT_FLEXIBLE_PAGE_SIZES := true
              +' && bash generate.sh '+shlex.quote(posix(work))])
         marker.write_text(key)
     prepare_crt(ndk,work)
+    from prepare_compat_libc import prepare
+    compat_info = prepare(ndk,work/"crt")
+    mkfile=work/"busybox/Android.mk"
+    text=mkfile.read_text()
+    if "-L$(LOCAL_PATH)/../crt" not in text:
+        mkfile.write_text(text.replace("LOCAL_LDFLAGS := ", "LOCAL_LDFLAGS := $(LOCAL_PATH)/../crt/arc4random.o -L$(LOCAL_PATH)/../crt "),newline="\n")
     names = re.findall(r'^"([^"\\]+)" "\\0"$',
                        (work/'busybox/include/applet_tables.h').read_text(), re.M)
     if set(names) != expected_applets or len(names) != len(expected_applets):
@@ -240,7 +246,8 @@ APP_SUPPORT_FLEXIBLE_PAGE_SIZES := true
         'requested_applets_match':sorted(names)==sorted(expected_applets),
         'sources':SOURCES, 'elf':info,
         'android_note':'Private CRT note override: target 28 / r30 / 16248370; runtime code unchanged.',
-        'runtime_testing':'Not run; API 28 runtime compatibility unverified.'}
+        'arc4random_compat':compat_info,
+        'runtime_testing':'Not run by builder; API 28 runtime compatibility unverified.'}
     (out/'BUILD_MANIFEST.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8')
     (out/'SHA256SUMS.txt').write_text(sha(binary)+'  busybox\n')
     print(f'Build complete: {binary}\nSize: {info["bytes"]} bytes; applets: {len(names)}; LLVM bitcode objects: {bitcode}',flush=True)

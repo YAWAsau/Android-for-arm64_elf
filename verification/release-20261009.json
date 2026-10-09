@@ -1,0 +1,72 @@
+{
+  "published_date": "2026-10-09",
+  "target": "aarch64-linux-android28",
+  "ndk_revision": "30.0.16248370",
+  "artifacts": [
+    {
+      "name": "zstd",
+      "sha256": "47d984b267efe90e223cd5338e37f661ad3ced6cae5daae62d887fa724408e81",
+      "bytes": 1010920,
+      "build_date": "2026-09-26",
+      "source_recipe": "0e0cbc7"
+    },
+    {
+      "name": "tar",
+      "sha256": "45f372224da44d0e2f18da92926ecf9018224337d7f5b046e4a5aacea5701073",
+      "bytes": 1247024,
+      "build_date": "2026-09-26",
+      "source_recipe": "0e0cbc7"
+    },
+    {
+      "name": "busybox",
+      "sha256": "aea4610b3f8956d80edce07f084724c460bb609fb3366b6c368e9dbba41ef96f",
+      "bytes": 929328,
+      "build_date": "2026-10-09",
+      "source_recipe": "release source"
+    },
+    {
+      "name": "smbclient",
+      "sha256": "534efa4a802e3c5ac23048415db144742af2dcc3980a7edb76d15417d2a7ed69",
+      "bytes": 7549864,
+      "build_date": "2026-09-26",
+      "source_recipe": "0e0cbc7"
+    },
+    {
+      "name": "smbd",
+      "sha256": "f3776f82870ce6025bb7d94688e14b117681e27252cc466ca222869ddff86227",
+      "bytes": 11151352,
+      "build_date": "2026-09-26",
+      "source_recipe": "0e0cbc7"
+    },
+    {
+      "name": "samba-dcerpcd",
+      "sha256": "d67922a07b6c874757ec0b06f9f6789d92b2689bb55702048c5c8f86ebdf48a6",
+      "bytes": 5855080,
+      "build_date": "2026-09-26",
+      "source_recipe": "0e0cbc7"
+    },
+    {
+      "name": "rpcd_classic",
+      "sha256": "5261b6ae89ccb777d2a418412f6284f22e5148ce88b54729262626e7dea0d966",
+      "bytes": 13806336,
+      "build_date": "2026-09-26",
+      "source_recipe": "0e0cbc7"
+    },
+    {
+      "name": "rpcd_lsad",
+      "sha256": "bf37062b93d67216581562edadc57bca45a5a314be15008baa20e197bfe1460a",
+      "bytes": 8810128,
+      "build_date": "2026-09-26",
+      "source_recipe": "0e0cbc7"
+    },
+    {
+      "name": "rpcd_winreg",
+      "sha256": "2243c39c8e6a07a7d9819d9983f82070c9db3dc815e7458f19581b8f417542ea",
+      "bytes": 6983600,
+      "build_date": "2026-09-26",
+      "source_recipe": "0e0cbc7"
+    }
+  ],
+  "runtime_testing": "No additional runtime testing for publication; API 28 compatibility unverified.",
+  "samba_path_patch_in_binaries": false
+}
