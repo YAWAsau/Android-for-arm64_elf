@@ -1,3 +1,7 @@
+# 2026-10-09：補齊 v858 NDK r30 相容產物
+
+同步 tar、zstd、smbclient 的 getrandom 相容版本與配方，BusyBox 已包含。保留 FIFO 上傳補丁及整合來源的 Android 路徑修正。smbd/RPC 未重建，不能視為已修復；測試範圍見 verification/NDK-R30-COMPAT.md。
+
 # 2026-10-09：發布目前 ELF 與最新配方
 
 BusyBox 更新為 kernel getrandom / arc4random 相容版本（929328 bytes），API 28 實機相容性未驗證。其餘八個 ELF 沿用 2026-09-26 產物；Samba 路徑補丁只更新來源，尚未重建。發布清單見 `verification/release-20261009.json`。

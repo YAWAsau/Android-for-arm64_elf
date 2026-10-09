@@ -142,7 +142,7 @@ def main():
                 os.utime(item, (1760843340, 1760843340))
         tool=ndk/'toolchains/llvm/prebuilt/windows-x86_64/bin'
         private_crt,crt_info=prepare_static_crt(ndk,stage/'crt-api28-r30')
-        crt_link_flags=LDFLAGS+' -B'+private_crt.parent.as_posix()+'/'
+        crt_link_flags=LDFLAGS+' -B'+private_crt.parent.as_posix()+'/ -L'+private_crt.parent.as_posix()
         script=['#!/usr/bin/bash','set -eu','export PATH=/usr/bin:/bin','export LC_ALL=C','export TZ=UTC','export SOURCE_DATE_EPOCH=1760843340']
         for key,value in {'CC':msys(tool/'clang.exe')+' --target=aarch64-linux-android28','AR':msys(tool/'llvm-ar.exe'),'RANLIB':msys(tool/'llvm-ranlib.exe'),'NM':msys(tool/'llvm-nm.exe'),'STRIP':msys(tool/'llvm-strip.exe'),'CFLAGS':CFLAGS,'LDFLAGS':crt_link_flags,'FORCE_UNSAFE_CONFIGURE':'1',**CONFIGURE_ENV}.items():
             assert "'" not in value

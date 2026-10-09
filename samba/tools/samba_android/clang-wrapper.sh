@@ -8,7 +8,7 @@ case " $all_args " in
     # Use a private static CRT with the configured target/NDK identification.
     # -B changes CRT lookup without replacing any NDK runtime code.
     : "${SAMBA_STATIC_CRT:?Run build.ps1 to prepare the static CRT}"
-    extra+=("-B$(cygpath -m "$SAMBA_STATIC_CRT")/")
+    extra+=("-B$(cygpath -m "$SAMBA_STATIC_CRT")/" "-L$(cygpath -m "$SAMBA_STATIC_CRT")" "$(cygpath -m "$SAMBA_STATIC_CRT")/arc4random.o")
     filtered=()
     for arg in "$@"; do
       case "$arg" in

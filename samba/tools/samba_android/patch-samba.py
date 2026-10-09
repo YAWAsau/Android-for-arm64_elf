@@ -323,3 +323,12 @@ dump_new = ('#ifdef __ANDROID__\n' + dump_old.replace(
 ) + '\n#else\n' + dump_old + '\n#endif')
 apply_exact_patch("source3/smbd/smb1_process.c", dump_old, dump_new,
                   "SMB1 diagnostic packet dump directory")
+
+# Native smbclient pipe-only transfer granularity; legacy callers stay unchanged.
+import runpy
+_patch_argv = sys.argv
+try:
+    sys.argv = [str(Path(__file__).with_name('patch-pipe-upload.py')), _patch_argv[1]]
+    runpy.run_path(sys.argv[0], run_name='__main__')
+finally:
+    sys.argv = _patch_argv

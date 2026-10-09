@@ -73,7 +73,10 @@ EOF
 # A missing runtime-path patch anchor is fatal under set -e, before Waf runs.
 python3 "$SAMBA_REPO/tools/samba_android/patch-samba.py" "$SAMBA_BUILD_ROOT"
 
-if [ ! -f bin/.android-samba-server-configured ]; then
+# Waf caches absolute compiler-wrapper paths. Moving a source kit must not
+# silently keep using the wrapper from a different checkout.
+recipe_key=$(printf '%s\n' "$SAMBA_REPO" "$SAMBA_NDK" "$profile"; sha256sum "$SAMBA_REPO/tools/samba_android/clang-wrapper.sh" "$SAMBA_REPO/tools/samba_android/arc4random_kernel.c")
+if [ ! -f bin/.android-samba-server-configured ] || [ "$(cat bin/.android-samba-server-configured)" != "$recipe_key" ]; then
   ./configure \
     --cross-compile \
     --hostcc="bash $SAMBA_REPO/tools/samba_android/hostcc-wrapper.sh" \
@@ -89,7 +92,7 @@ if [ ! -f bin/.android-samba-server-configured ]; then
     --disable-python \
     --bundled-libraries=ALL --with-static-modules=ALL \
     --nonshared-binary=client/smbclient,smbd/smbd,samba-dcerpcd,rpcd_classic,rpcd_lsad,rpcd_winreg
-  touch bin/.android-samba-server-configured
+  printf '%s\n' "$recipe_key" > bin/.android-samba-server-configured
 fi
 
 # Repair cached host outputs produced before the wrapper normalized .exe names.

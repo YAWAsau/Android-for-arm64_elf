@@ -159,4 +159,4 @@ Samba 執行了原有的 ADB configure 探測與備用機上的 `smbclient --ver
 
 ## 目前下載
 
-[2026-10-09 ELF 與完整來源包](https://github.com/YAWAsau/Android-for-arm64_elf/releases/tag/elf-20261009-r30-api28)。BusyBox 為新產物，其餘八個 ELF 沿用 2026-09-26 版本；Samba 新增路徑補丁尚未編入本次產物。API 28 實機相容性未驗證。
+[NDK r30 舊核心相容修正版](https://github.com/YAWAsau/Android-for-arm64_elf/releases/tag/elf-20261009-r30-api28-compat1)。BusyBox、tar、zstd、smbclient 已更新；smbd 與四個 RPC 仍是舊產物，尚未包含相容修正。來源配方已同步，完整範圍見 [NDK-R30-COMPAT](verification/NDK-R30-COMPAT.md)。

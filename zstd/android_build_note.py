@@ -1,6 +1,6 @@
 """Use a private static CRT with official target/NDK identification.
 
-Only metadata changes. The installed NDK and runtime code stay unchanged.
+Private CRT metadata and stateless arc4random compatibility. Installed NDK is unchanged.
 """
 from pathlib import Path
 import hashlib
@@ -60,7 +60,10 @@ def prepare_static_crt(ndk, output, revision='30.0.16248370', target_api=28):
     if original_path.read_bytes() != original:
         raise ValueError('Installed NDK CRT changed during build')
     digest = lambda b: hashlib.sha256(b).hexdigest()
+    from prepare_compat_libc import prepare
+    compat = prepare(ndk, private.parent)
     return private, {
+        'arc4random_compat':compat,
         'kind':'private-static-crt-target-ident-v1',
         'source_static_crt_sha256':digest(original),
         'private_static_crt_sha256':digest(private.read_bytes()),
@@ -68,7 +71,7 @@ def prepare_static_crt(ndk, output, revision='30.0.16248370', target_api=28):
         'original_android_notes':[{'type':k,'data':d.hex()} for k,d in android_notes(original)],
         'non_ident_sections_unchanged':True,
         'installed_ndk_unchanged':True,
-        'runtime_compatibility_changed':False,
+        'runtime_compatibility_changed':True,
     }
 
 
@@ -133,5 +136,5 @@ def print_android_build(info):
           '; NDK version in note: '+(info['crt_ndk_version_note'] or 'absent')+
           '; matches selected CRT', flush=True)
     if info['identification_override']:
-        print('Identification: official API28/r30 note on private static CRT; runtime code unchanged.', flush=True)
+        print('Identification: official API28/r30 note on private static CRT; private libc uses stateless arc4random.', flush=True)
     print('Runtime compatibility: not tested by this build; target API and CRT note are distinct.', flush=True)

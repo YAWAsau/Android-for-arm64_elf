@@ -90,7 +90,7 @@ def link(name, inputs):
     dest = OUT/(name if MODE == 'android' else name+'.exe')
     objs = [objects[p.relative_to(SRC)] for p in inputs]
     if MODE == 'android':
-        args = [cc,*target,'-B'+private_crt.parent.as_posix()+'/','-flto=full','-static','-no-pie','-pthread','-Wl,--gc-sections','-Wl,-z,max-page-size=16384','-Wl,-z,common-page-size=16384',*objs,'-lm','-o',str(dest)]
+        args = [cc,*target,'-B'+private_crt.parent.as_posix()+'/','-L'+private_crt.parent.as_posix(),'-flto=full','-static','-no-pie','-pthread','-Wl,--gc-sections','-Wl,-z,max-page-size=16384','-Wl,-z,common-page-size=16384',*objs,'-lm','-o',str(dest)]
     else:
         args = [cc,'/nologo',*objs,'/Fe'+str(dest)]
     result = subprocess.run(args,env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,errors='replace')

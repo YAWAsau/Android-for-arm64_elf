@@ -1,7 +1,7 @@
 """Brand a private r30 static CRT copy with the configured target metadata.
 
-This changes identification only, not the static runtime's API compatibility.
-The installed NDK is never modified.
+The CRT note changes identification only; the separate private libc replaces
+arc4random with a stateless getrandom implementation. Installed NDK is unchanged.
 """
 from pathlib import Path
 import os
@@ -44,3 +44,7 @@ with tempfile.TemporaryDirectory(dir=output) as temp:
     if not destination.exists() or destination.read_bytes() != result.read_bytes():
         result.replace(destination)
 print('Static CRT identification: Android target 28, NDK r30 (16248370); runtime unchanged.')
+
+from prepare_compat_libc import prepare
+prepare(Path(native(ndk)), Path(native(output)))
+print('Private libc: stateless getrandom arc4random compatibility enabled.')
