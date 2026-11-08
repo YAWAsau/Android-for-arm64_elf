@@ -19,6 +19,14 @@ $utf8 = New-Object System.Text.UTF8Encoding($false)
 [Console]::OutputEncoding = $utf8
 $OutputEncoding = $utf8
 
+# Use the same Python discovery as the component builders for artifact validation.
+$VerifierPython = $Python
+if (-not $VerifierPython) {
+    $BundledVerifierPython = "$env:USERPROFILE/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe"
+    if (Test-Path -LiteralPath $BundledVerifierPython) { $VerifierPython = $BundledVerifierPython }
+    else { $VerifierPython = 'python' }
+}
+
 # Each child has its own environment discovery and can be used independently.
 $targets = @(
     @{ Name = 'zstd'; Output = 'out-r30'; Binaries = @('zstd'); Metadata = 'out-r30/BUILD_INFO.json' },
@@ -77,6 +85,8 @@ foreach ($target in $targets) {
             if (-not (Test-Path -LiteralPath $binary -PathType Leaf)) {
                 throw "The component did not publish $binaryName."
             }
+            & $VerifierPython -X utf8 (Join-Path $PSScriptRoot 'ci/verify_smb_rng.py') $binary
+            if ($LASTEXITCODE -ne 0) { throw "Static RNG artifact validation failed: $binaryName" }
             $built += [pscustomobject]@{
                 component = $name
                 name = $binaryName

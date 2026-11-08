@@ -1,0 +1,13 @@
+{
+  "protected_upstream_and_android_patch_files": 1124,
+  "unchanged": true,
+  "clean_git_checkout": "passed",
+  "bash_syntax": "passed",
+  "rng_unit_tests": 7,
+  "full_and_repository_modes_reject_missing_tracked_upstream": true,
+  "known_fixed_server_accepted": true,
+  "historical_unpatched_server_rejected": true,
+  "runtime_rebuilt": false,
+  "zstd_existing_dev_changes": "preserved",
+  "root_build_validates_all_nine_before_collection": true
+}

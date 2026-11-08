@@ -3,6 +3,7 @@ param(
     [string]$Ndk,
     [string]$Python,
     [ValidateRange(1,128)][int]$Jobs = 8,
+    [ValidateSet('bundled','dev')][string]$Source = 'bundled',
     [string]$SpeedBackupRoot
 )
 
@@ -38,9 +39,10 @@ try {
     $revision = Get-Content -LiteralPath (Join-Path $Ndk 'source.properties') -Raw
     if ($revision -notmatch 'Pkg.Revision\s*=\s*30\.0\.16248370\s') { throw 'NDK r30 (30.0.16248370) required' }
     $env:ANDROID_NDK_HOME = $Ndk
-    & $Python -X utf8 (Join-Path $PSScriptRoot 'build_native.py') android --jobs $Jobs
+    & $Python -X utf8 (Join-Path $PSScriptRoot 'build_native.py') android --jobs $Jobs --source $Source
     if ($LASTEXITCODE -ne 0) { throw 'zstd static build or ELF validation failed' }
     $binary = Join-Path $PSScriptRoot 'out-r30/zstd'
+    if ($Source -eq 'dev') { $binary = Join-Path $PSScriptRoot 'out-r30-dev/zstd' }
     $hash = (Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash.ToLowerInvariant()
     if ($SpeedBackupRoot) {
         $toolsFile = Join-Path $SpeedBackupRoot 'tools.sh'

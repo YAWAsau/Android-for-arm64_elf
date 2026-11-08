@@ -1,0 +1,17 @@
+name: Full ELF source validation
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python ci/check_repository.py
+      - run: python ci/test_rng_guard.py
+      - name: Bash syntax for first-party build recipes
+        run: |
+          find busybox samba/tools -name '*.sh' -not -path '*/upstream/*' -print0 | xargs -0 -r -n 1 bash -n

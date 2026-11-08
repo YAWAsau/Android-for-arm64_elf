@@ -1,4 +1,4 @@
-"""Build fully static pinned zstd using NDK r30; optional MSVC host tests.
+"""Build fully static bundled or latest official dev zstd using NDK r30.
 
 Usage: python build_native.py android|host [--jobs 8]
 Set ANDROID_NDK_HOME or VS_VCVARS64 to override the installed tool locations.
@@ -21,11 +21,28 @@ COMMIT = '01b7154f1172432f8abe9b3bb9909e14a1176b7d'
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('mode', nargs='?', choices=('android', 'host'), default='android')
 parser.add_argument('--jobs', type=int, default=8)
+parser.add_argument('--source', choices=('bundled', 'dev'), default='bundled')
 options = parser.parse_args()
 if not 1 <= options.jobs <= 128:
     parser.error('--jobs must be between 1 and 128')
 MODE = options.mode
-OUT = ROOT/('android-r30-direct' if MODE == 'android' else 'host-direct')
+source_origin = 'bundled'
+if options.source == 'dev':
+    # Each invocation resolves dev afresh; retain the exact checkout for provenance.
+    cache = ROOT/'.source-cache'
+    cache.mkdir(exist_ok=True)
+    SRC = Path(tempfile.mkdtemp(prefix='dev-', dir=cache))
+    source_origin = 'https://github.com/facebook/zstd.git'
+    subprocess.run(['git', 'init', str(SRC)], check=True)
+    subprocess.run(['git', '-C', str(SRC), 'fetch', '--depth=1', source_origin,
+                    'refs/heads/dev'], check=True)
+    COMMIT = subprocess.check_output(['git', '-C', str(SRC), 'rev-parse',
+                                      'FETCH_HEAD'], text=True).strip()
+    subprocess.run(['git', '-C', str(SRC), '-c', 'core.autocrlf=false',
+                    'checkout', '--detach', COMMIT], check=True)
+    print('Official dev resolved to '+COMMIT, flush=True)
+output_suffix = '-dev' if options.source == 'dev' else ''
+OUT = ROOT/(('android-r30-direct' if MODE == 'android' else 'host-direct')+output_suffix)
 OUT.mkdir(exist_ok=True)
 if (SRC/'.git').exists():
     assert subprocess.check_output(['git','-C',str(SRC),'rev-parse','HEAD'],text=True).strip() == COMMIT
@@ -104,7 +121,7 @@ if MODE == 'host':
         common = [SRC/'programs'/n for n in ['datagen.c','util.c','timefn.c']]
         link(name,lib_sources+common+[SRC/p for p in entries])
 else:
-    release = ROOT/'out-r30'
+    release = ROOT/('out-r30'+output_suffix)
     release.mkdir(exist_ok=True)
     subprocess.run([str(tool/'llvm-strip.exe'),'--strip-unneeded','-o',str(release/'zstd'),str(binary)],check=True)
     binary = release/'zstd'
@@ -136,13 +153,14 @@ else:
                 android_note = True
             pos = dp+(ds+3)//4*4
     assert android_note, 'Expected NDK r30 static CRT note'
-info = {'commit':COMMIT,'mode':MODE,'compiler':subprocess.check_output([cc,'--version'] if MODE=='android' else [cc],env=env,stderr=subprocess.STDOUT,text=True,errors='replace') if MODE=='android' else 'MSVC 2022 /O2 /MT',
+info = {'commit':COMMIT,'source_origin':source_origin,'source_mode':options.source,'mode':MODE,'compiler':subprocess.check_output([cc,'--version'] if MODE=='android' else [cc],env=env,stderr=subprocess.STDOUT,text=True,errors='replace') if MODE=='android' else 'MSVC 2022 /O2 /MT',
         'sources':records,'link':linkargs,'sha256':hashlib.sha256(binary.read_bytes()).hexdigest(),'binary':str(binary)}
 (OUT/'build.json').write_text(json.dumps(info,indent=2)+'\n',encoding='utf8')
 if MODE == 'android':
     (release/'BUILD_INFO.json').write_text(json.dumps({
         **android_build,
-        'commit':COMMIT, 'ndk':'30.0.16248370', 'api':28, 'target':'arm64-v8a',
+        'commit':COMMIT, 'source_origin':source_origin, 'source_mode':options.source,
+        'ndk':'30.0.16248370', 'api':28, 'target':'arm64-v8a',
         'lto':'full', 'static':True, 'page_size':16384, 'sha256':info['sha256'],
         'static_crt_android_note': [{'type':k,'data':d.hex()} for k,d in expected_notes],
         'compiler':info['compiler'], 'android_runtime_tested':False,

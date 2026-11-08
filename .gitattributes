@@ -5,3 +5,8 @@ tar/upstream/** -text
 busybox/upstream/** -text
 samba/upstream-source/** -text
 *.zip binary
+
+# Keep source hashes stable on clean checkout (existing CRLF RNG sources).
+busybox/arc4random_kernel.c -text
+tar/arc4random_kernel.c -text
+zstd/arc4random_kernel.c -text

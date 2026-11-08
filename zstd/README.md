@@ -6,11 +6,16 @@
 ./build.ps1
 ./build.ps1 -Ndk 'C:/path/to/ndk/30.0.16248370' -Python python
 ./build.ps1 -Jobs 8
+./build.ps1 -Source dev  # 每次抓官方 dev 最新提交後編譯
 ```
 
 從整包根目錄執行時使用 `./zstd/build.ps1`。需要同步腳本內的 zstd SHA 時加上 `-SpeedBackupRoot`，指定含 `tools/tools.sh` 的根目錄；舊式根目錄 `tools.sh` 亦相容。此參數只更新 SHA，不搬移二進位。
 
 上游固定於 commit `01b7154f1172432f8abe9b3bb9909e14a1176b7d`；來源與 SHA256 見 `upstream_source_sha256.json`。`upstream/` 必須完整保留，包含授權和 host 模式所需測試源碼。
+
+預設 `-Source bundled` 使用上述固定源碼。`-Source dev` 需要 Git 和網路，每次從 `https://github.com/facebook/zstd.git` 抓取官方 `dev` 分支，再以解析出的完整 commit 編譯；下載失敗就停止，不退回舊源碼。dev 是開發分支，不是穩定版發布。
+
+dev 產物位於 `out-r30-dev/zstd`，`BUILD_INFO.json` 記錄實際 commit；完整來源保留在 `.source-cache/dev-*/`。中間產物位於 `android-r30-direct-dev/`。保留 Full LTO、靜態連結與 NDK r30 的 stateless getrandom/arc4random 舊核心相容修正。外層一次編譯入口仍使用 bundled。
 
 入口會自動尋找既有 NDK r30（SambaAndroidBuild、ANDROID_NDK_HOME 或 Android SDK 安裝路徑），並優先使用此電腦的 Codex Python runtime，找不到時使用 PATH 中的 python。`-Jobs` 控制並行編譯數，預設 8。本資料夾可獨立搬走使用。
 

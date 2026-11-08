@@ -120,6 +120,7 @@ if printf '%s\n%s\n' "$elf_program_headers" "$elf_dynamic" | grep -Eq 'INTERP|NE
   echo 'ERROR: smbclient is not fully static; refusing to publish.' >&2
   exit 1
 fi
+python3 "$SAMBA_REPO/tools/samba_android/verify-rng-elf.py" "$SMBCLIENT"
 mkdir -p "$SAMBA_OUT"
 for target in $server_targets; do
   binary="bin/default/source3/$target"
@@ -129,6 +130,7 @@ for target in $server_targets; do
     echo "ERROR: $target is not fully static" >&2
     exit 1
   fi
+  python3 "$SAMBA_REPO/tools/samba_android/verify-rng-elf.py" "$binary"
   cp "$binary" "$SAMBA_OUT/${target##*/}"
   "$NDK_BIN/llvm-readelf.exe" -h -l -d -n "$binary" > "$SAMBA_OUT/${target##*/}-elf-static-check.txt"
 done

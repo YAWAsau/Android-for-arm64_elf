@@ -4,4 +4,8 @@ android-r30-direct/
 host-direct/
 __pycache__/
 *.pyc
+.source-cache/
+out-r30-dev/
+android-r30-direct-dev/
+host-direct-dev/
 dist/

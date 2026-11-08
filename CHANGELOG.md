@@ -1,3 +1,9 @@
+## 2026-11-08
+
+- 同步通知中適用的 repository／完整來源清單驗證區分，完整上游來源繼續保留。
+- 增加獨立靜態 ELF RNG guard 與拒絕案例測試；Samba 六個目標發布前均執行驗證，缺少私人 runtime 時停止。
+- 保留現有 zstd bundled／dev 建置模式、Android patch 與歷史 ELF；未重建或替換發布成品。
+
 # 2026-10-09：補齊 v858 NDK r30 相容產物
 
 同步 tar、zstd、smbclient 的 getrandom 相容版本與配方，BusyBox 已包含。保留 FIFO 上傳補丁及整合來源的 Android 路徑修正。smbd/RPC 未重建，不能視為已修復；測試範圍見 verification/NDK-R30-COMPAT.md。

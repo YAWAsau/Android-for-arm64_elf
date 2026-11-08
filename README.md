@@ -160,3 +160,18 @@ Samba 執行了原有的 ADB configure 探測與備用機上的 `smbclient --ver
 ## 目前下載
 
 [NDK r30 舊核心相容修正版](https://github.com/YAWAsau/Android-for-arm64_elf/releases/tag/elf-20261009-r30-api28-compat1)。BusyBox、tar、zstd、smbclient 已更新；smbd 與四個 RPC 仍是舊產物，尚未包含相容修正。來源配方已同步，完整範圍見 [NDK-R30-COMPAT](verification/NDK-R30-COMPAT.md)。
+
+## 2026-11-08：來源與 RNG 交付驗證
+
+此倉庫保留 tar／zstd／BusyBox／Samba 完整上游來源與 Android patch，不套用備份腳本倉庫的來源裁剪規則。
+`python ci/check_repository.py` 驗證追蹤檔、完整來源 SHA、上游目錄與 repository 模式空白檢查。
+`check_whitespace.py` 未指定 `--repository` 時仍依完整 SOURCE_MANIFEST.json 清單驗證，缺檔必須失敗。
+上游與 patch 的原始位元組保留，完整性由 SHA 驗證；不為空白檢查重寫上游。
+
+Samba 的獨立建置在複製 smbclient／smbd／RPC 成品前驗證 ELF／RNG，缺少私人 runtime 時立即停止。
+`ci/verify_smb_rng.py` 可不載入 Samba 上游來源直接驗證單一 ELF；同一份 guard 隨 Samba 子目錄保留，維持獨立建置能力。
+外層 build.ps1 也會在收集 out/ 前驗證全部九個 ELF。全部重新建置後可執行 `python ci/check_repository.py --artifacts out`，驗證九個 ELF 及其 SHA；這不取代實機功能驗證。
+歷史 out/ 和既有 Release 不會因此自動更新；舊 server ELF 若未帶 RNG 修補會被新 gate 拒絕。
+
+新增或移除來源檔案時，先 stage 預期的檔案清單，再執行 `python ci/update_source_manifest.py` 並 stage 更新的兩份 manifest。
+保留既有 zstd `-Source dev` 選項與隔離輸出。此輪未重建／發布新 ELF，也未更動上游或 Android 功能 patch。
