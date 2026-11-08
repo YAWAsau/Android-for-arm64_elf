@@ -1,6 +1,6 @@
 # Samba：smbclient、smbd 與 RPC 共用建置
 
-來源基於本對話最後的 `samba-android-arm64-ndkr30-api28-build-scripts.zip`；完整原始雜湊與來源包出處在 `ORIGIN.json`。
+2026-11-08 整合 Samba 4.25.1／publisher；完整上游來源與原有 Android patch 均保留，來源記錄在 `ORIGIN.json`。本次尚未重建或實機驗證，不能把舊 ELF 視為新配方產物。
 
 ```powershell
 ./build.ps1
@@ -15,18 +15,18 @@
 
 NDK 會自動尋找既有安裝。MSYS2 預設 `C:\msys64`，ADB 預設 `C:\platform-tools\adb.exe`，GPG 預設 Git for Windows 的 `C:\Program Files\Git\usr\bin\gpg.exe`；皆可用對應的 `-Ndk`、`-Msys`、`-Adb`、`-Gpg` 參數指定。
 
-建置快取預設 `%USERPROFILE%\SambaAndroidBuild`；可用 `-CacheRoot D:\SambaAndroidBuild` 指定英文、不含空白或單引號的路徑。`-Clean` 清除所選 profile 的目標工作來源，保留原有加密依賴快取。
+建置快取預設 `%USERPROFILE%\SambaElf4251PublisherBuild`；可用 `-CacheRoot D:\SambaAndroidBuild` 指定英文、不含空白或單引號的路徑。`-Clean` 清除所選 profile 的目標工作來源，保留原有加密依賴快取。
 
 ## 來源與裝置需求
 
-- `upstream-source/` 隨附 Samba 4.25.0、GMP／Nettle／GnuTLS／Parse::Yapp 的來源及可用的簽章。會先填入缺少的快取，再執行原有 SHA／GPG 驗證。
-- 沿用每次查詢 Samba 官方最新穩定版的行為；查詢失敗才採用最新的隨附／既有快取版本，並顯示警告。依賴版本維持固定。
+- `upstream-source/` 隨附 Samba 4.25.1、GMP 6.3.0／Nettle 4.0／GnuTLS 3.8.13／Parse::Yapp 1.21；也保留舊版本完整封存 的來源及可用的簽章。會先填入缺少的快取，再執行原有 SHA／GPG 驗證。
+- 固定已審核的 Samba 4.25.1 與 Nettle 4.0，不自動追蹤新版，以免 publisher 雜湊補丁錯套。舊 Nettle 快取會被拒絕，請使用新的 `-CacheRoot`。
 - 必須連接已授權且可 root 的 ARM64 Android 裝置，供原有 configure 探測和建置最後的 `smbclient --version` 檢查使用。編譯與連結全部在 Windows 完成。
 - 2026-09-26 的整合版已在 Windows PowerShell 5.1 建置六個二進位，通過全靜態 ELF 檢查；原有 ADB configure 探測及 `smbclient --version` 也通過，版本為 4.25.0。2026-10-05 新增的 Android 暫存路徑補丁尚未重新編譯或進行裝置測試；外層 `verification/` 是前述歷史建置記錄。完整配方說明見 `tools/samba_android/SERVER-BUILD.md`。
 
 ## 官方源碼更新後的補丁
 
-每次執行 `build.ps1` 都會查詢官方最新穩定版、驗證簽章，再由 `build-samba.sh` 執行 `tools/samba_android/patch-samba.py`，最後才進入 Waf 配置與編譯。使用來源快取時仍會執行補丁；已套用的相同補丁不會重複插入。
+每次執行 `build.ps1` 都會驗證固定版本簽章，再由 `build-samba.sh` 執行 `tools/samba_android/apply-patches.py`，核對每個受影響檔案套用前後的雜湊，最後才進入 Waf 配置與編譯。使用來源快取時仍會執行補丁；已套用的相同補丁不會重複插入。
 
 本次新增 Android 預設暫存目錄 `/data/local/tmp`，涵蓋 Samba `tmpdir()`／IPC$、檔案式 Kerberos 憑證快取、Heimdal `%{TEMP}` 與 SMB1 診斷封包輸出。保留環境變數覆寫、Heimdal 的 `secure_getenv` 與非 Android 行為。新增補丁遇到來源檔案移動、預期區塊不符或重複時，會報錯中止編譯，需更新配方後重跑；不會猜測如何套用。
 
@@ -35,3 +35,9 @@ NDK 會自動尋找既有安裝。MSYS2 預設 `C:\msys64`，ADB 預設 `C:\plat
 詳細移植範圍及參考來源見 [ANDROID-PATCHES.md](ANDROID-PATCHES.md)。日後上游改動仍可能需要維護補丁，不能保證所有未來版本免修改就能編譯。
 
 此資料夾可以獨立搬走使用。外層總建置入口會以 `size`／`all` 呼叫此腳本，並把六個產物一同收集。
+
+## Publisher 整合
+
+只有設定 `SPEEDBACKUP_SMB_RPC_TOKEN` 且走 stdin 命令模式才啟用 `SBRPC1` 逐命令回覆及繼承的 fd 198 owner pidfd 等待；一般 `-c` 呼叫不變。保留 pipe-upload 的 FIFO chunk/window 參數與一般檔案／下載行為。這裡提供 ELF 與來源，不包含備份腳本的 Rust／Shell publisher 控制層。
+
+備份配方的 24 個 Android baseline 檔案均保持相同內容，另保留暫存路徑、pipe-upload，納入 RPC banner 與 HOSTCC quoting 修正；33 個檔案有實際來源改動。CI 驗證乾淨套用、重複套用及來源漂移拒絕。沒有連線的 ADB 裝置時無法完成 configure／實機測試，本次不發布新二進位。

@@ -37,7 +37,7 @@ if [ ! -f "$SAMBA_PREFIX/lib/libgmp.a" ]; then
 fi
 
 if [ ! -f "$SAMBA_PREFIX/lib/libnettle.a" ] || [ ! -f "$SAMBA_PREFIX/lib/libhogweed.a" ]; then
-  cd "$SRC/nettle-3.10.2"
+  cd "$SRC/nettle-4.0"
   if [ ! -f Makefile ]; then
     ./configure --host=aarch64-linux-android --prefix="$SAMBA_PREFIX" \
       --enable-static --disable-shared --disable-documentation \

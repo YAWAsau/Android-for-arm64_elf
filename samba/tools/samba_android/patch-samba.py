@@ -23,6 +23,15 @@ def apply_exact_patch(relative_path, old, new, label):
     print(f"Applied Android patch: {label}")
 
 
+def replace_required(text, old, new, label):
+    if old in text:
+        return text.replace(old, new)
+    if new in text:
+        return text
+    raise SystemExit(f'Expected {label} patch anchor was not found')
+
+if len(sys.argv) != 2:
+    raise SystemExit('Usage: patch-samba.py <samba-source-root>')
 source = Path(sys.argv[1]) / "source3" / "wscript"
 # Bionic's generated Linux UAPI header omits the inline speed helper.
 interfaces = Path(sys.argv[1]) / "lib" / "socket" / "interfaces.c"
@@ -37,7 +46,7 @@ text = source.read_text(encoding="utf-8")
 dumpcore = Path(sys.argv[1]) / "source3" / "lib" / "dumpcore.c"
 dumpcore_text = dumpcore.read_text(encoding="utf-8")
 # umask uses only the low nine permission bits; Bionic rejects other bits.
-dumpcore.write_text(dumpcore_text.replace("umask(~(0700));", "umask(0077);"), encoding="utf-8")
+dumpcore.write_text(replace_required(dumpcore_text, "umask(~(0700));", "umask(0077);", 'dumpcore umask'), encoding="utf-8")
 old = "    seteuid = False\n\n#\n# Ensure we select the correct set of system calls on Linux.\n#"
 new = "    # Android arm64 is Linux and uses Linux per-thread credential syscalls.\n    # The generic runtime probe cannot accurately select this path under Bionic.\n    seteuid = True\n    conf.DEFINE('HAVE_LINUX_THREAD_CREDENTIALS', 1)\n\n#\n# Ensure we select the correct set of system calls on Linux.\n#"
 
@@ -86,14 +95,18 @@ guard_host_header("lib/replace/replace.c", "HAVE_SYS_SYSCALL_H", "#include <sys/
 guard_host_header("lib/replace/replace.c", "HAVE_SYS_PRCTL_H", "#include <sys/prctl.h>")
 getauxval_source = Path(sys.argv[1]) / "third_party" / "heimdal" / "lib" / "roken" / "getauxval.c"
 getauxval_text = getauxval_source.read_text(encoding="utf-8")
+getauxval_before = getauxval_text
 getauxval_text = getauxval_text.replace("#ifdef HAVE_GETAUXVAL\n", "#if defined(HAVE_GETAUXVAL) && !defined(_SAMBA_HOSTCC_)\n")
-getauxval_source.write_text(getauxval_text, encoding="utf-8")
+if getauxval_text != getauxval_before:
+    getauxval_source.write_text(getauxval_text, encoding="utf-8")
 replace_source = Path(sys.argv[1]) / "lib" / "replace" / "replace.c"
 replace_source_text = replace_source.read_text(encoding="utf-8")
+replace_before = replace_source_text
 for macro in ("HAVE_SYSCALL_COPY_FILE_RANGE", "HAVE_LINUX_IOCTL"):
     replace_source_text = replace_source_text.replace(f"#ifdef {macro}\n", f"#if defined({macro}) && !defined(_SAMBA_HOSTCC_)\n")
     replace_source_text = replace_source_text.replace(f"# ifdef {macro}\n", f"# if defined({macro}) && !defined(_SAMBA_HOSTCC_)\n")
-replace_source.write_text(replace_source_text, encoding="utf-8")
+if replace_source_text != replace_before:
+    replace_source.write_text(replace_source_text, encoding="utf-8")
 
 # MSYS Python can emit Windows absolute dependency paths containing '..'. Waf's
 # gccdeps path walker cannot resolve those components, despite the file existing.
@@ -158,7 +171,15 @@ subsystem_anchor = "        samba_builtin_subsystem = None,\n        )\n\n    if
 subsystem_patched = "        samba_builtin_subsystem = None,\n        )\n\n    if use_hostcc and bld.env.HOSTCC:\n        t.env = t.env.derive()\n        t.env.CC = Utils.to_list(bld.env.HOSTCC)\n        t.env.LINK_CC = Utils.to_list(bld.env.HOSTCC)\n\n    if cflags_end is not None:"
 binary_anchor = "        samba_ldflags  = pie_ldflags\n        )\n\n    if manpages is not None"
 binary_patched = "        samba_ldflags  = pie_ldflags\n        )\n\n    if use_hostcc and bld.env.HOSTCC:\n        t.env = t.env.derive()\n        t.env.CC = Utils.to_list(bld.env.HOSTCC)\n        t.env.LINK_CC = Utils.to_list(bld.env.HOSTCC)\n\n    if manpages is not None"
+# HOSTCC is a shell-quoted command string; Utils.to_list preserves its quotes.
+hostcc_old = "        t.env.CC = Utils.to_list(bld.env.HOSTCC)\n        t.env.LINK_CC = Utils.to_list(bld.env.HOSTCC)"
+hostcc_new = "        import shlex\n        t.env.CC = shlex.split(bld.env.HOSTCC)\n        t.env.LINK_CC = list(t.env.CC)"
+subsystem_patched = subsystem_patched.replace(hostcc_old, hostcc_new)
+binary_patched = binary_patched.replace(hostcc_old, hostcc_new)
+waf_text = waf_text.replace(hostcc_old, hostcc_new)
 if subsystem_patched in waf_text and binary_patched in waf_text:
+    if waf_text != wafsamba.read_text(encoding="utf-8"):
+        wafsamba.write_text(waf_text, encoding="utf-8")
     print("Waf host compiler selection already applied")
 elif subsystem_anchor in waf_text and binary_anchor in waf_text:
     waf_text = waf_text.replace(subsystem_anchor, subsystem_patched, 1)
@@ -174,8 +195,8 @@ passwd_source = Path(sys.argv[1]) / 'lib/util/util_pw.c'
 passwd_text = passwd_source.read_text(encoding='utf-8')
 for field, fallback in [('pw_passwd', '*'), ('pw_gecos', '')]:
     expression = f'(from->{field} != NULL ? from->{field} : "{fallback}")'
-    passwd_text = passwd_text.replace(f'strlen(from->{field})', f'strlen({expression})')
-    passwd_text = passwd_text.replace(f'talloc_strdup(ret, from->{field})', f'talloc_strdup(ret, {expression})')
+    passwd_text = replace_required(passwd_text, f'strlen(from->{field})', f'strlen({expression})', f'{field} length')
+    passwd_text = replace_required(passwd_text, f'talloc_strdup(ret, from->{field})', f'talloc_strdup(ret, {expression})', f'{field} copy')
 passwd_source.write_text(passwd_text, encoding='utf-8')
 
 # A static RPC worker pulls both smbd_base and RPC_NCACN_NP into one ELF.
@@ -190,7 +211,19 @@ if duplicate in server_text:
         raise SystemExit('Missing smbd_base dependency anchor')
     server_text = server_text.replace(anchor, anchor + '\n                        RPC_NCACN_NP_TRANSPORT', 1)
     server_build.write_text(server_text, encoding='utf-8')
-server_text = server_text.replace('                        RPC_NCACN_NP\n', '                        RPC_NCACN_NP_TRANSPORT\n')
+# Legacy partially patched trees may still have the old dependency, but only
+# the smbd_base library should switch to the transport-only subsystem.
+smbd_start = server_text.find("bld.SAMBA3_LIBRARY('smbd_base',")
+if smbd_start < 0:
+    raise SystemExit('Missing smbd_base library anchor in source3/wscript_build')
+# Waf normally closes the call on an indented argument line; use the next
+# top-level bld target as the section boundary instead.
+smbd_end = server_text.find("\nbld.", smbd_start + 1)
+if smbd_end < 0:
+    smbd_end = len(server_text)
+block = server_text[smbd_start:smbd_end]
+block = block.replace('                        RPC_NCACN_NP\n', '                        RPC_NCACN_NP_TRANSPORT\n')
+server_text = server_text[:smbd_start] + block + server_text[smbd_end:]
 server_build.write_text(server_text, encoding='utf-8')
 rpc_build = Path(sys.argv[1]) / 'source3/rpc_server/wscript_build'
 rpc_text = rpc_build.read_text(encoding='utf-8')
@@ -229,11 +262,14 @@ static_condition = "    if binname in ('client/smbclient', 'smbd/smbd', 'samba-d
 waf_text = waf_text.replace(old_static_condition, static_condition)
 waf_text = waf_text.replace("pie_ldflags.extend(['-static', '-no-pie'])", "pie_ldflags.extend(['-static', '-no-pie', '-Wl,--gc-sections', '-Wl,--icf=safe'])")
 static_patch = static_condition + "\n        pie_ldflags = [flag for flag in pie_ldflags if flag != '-pie']\n        pie_ldflags.extend(['-static', '-no-pie', '-Wl,--gc-sections', '-Wl,--icf=safe'])\n\n" + static_anchor
-wafsamba.write_text(waf_text, encoding="utf-8")
 if static_patch not in waf_text:
+    if static_condition in waf_text:
+        raise SystemExit('Incomplete existing Samba static linker patch; refusing duplicate block')
     if static_anchor not in waf_text:
         raise SystemExit('Expected Samba binary linker flags block was not found')
-    wafsamba.write_text(waf_text.replace(static_anchor, static_patch, 1), encoding="utf-8")
+    waf_text = waf_text.replace(static_anchor, static_patch, 1)
+if waf_text != wafsamba.read_text(encoding="utf-8"):
+    wafsamba.write_text(waf_text, encoding="utf-8")
 
 # Bionic's static libdl does not implement dlopen. Use Samba's own portable
 # fallback and its built-in module registration for the static Android build.
@@ -269,6 +305,44 @@ if overflow_new not in overflow_text:
     if overflow_old not in overflow_text:
         raise SystemExit('Expected Samba pointer overflow macro was not found')
     overflow_header.write_text(overflow_text.replace(overflow_old, overflow_new, 1), encoding='utf-8')
+
+# Request the optional robust-mutex backend only when TDB supports it.
+# Keep the normal file-lock backend and all diagnostic failure paths intact.
+for relative in ("source3/lib/gencache.c", "source3/lib/cleanupdb.c", "source3/profile/profile.c", "source3/utils/smb_prometheus_endpoint.c"):
+    target = Path(sys.argv[1]) / relative
+    original = target.read_text(encoding="utf-8")
+    marker = "(tdb_runtime_check_for_robust_mutexes() ? TDB_MUTEX_LOCKING : 0)"
+    if marker in original:
+        continue
+    if original.count("TDB_MUTEX_LOCKING") != 1:
+        raise SystemExit("Unexpected mutex request count: " + relative)
+    target.write_text(original.replace("TDB_MUTEX_LOCKING", marker), encoding="utf-8")
+
+# Suppress only the routine smbd startup banner. Keep -V and all diagnostics.
+server = Path(sys.argv[1]) / "source3/smbd/server.c"
+text = server.read_text(encoding="utf-8")
+old = '\tDBG_STARTUP_NOTICE("smbd version %s started.\\n%s\\n",\n\t\t\t   samba_version_string(),\n\t\t\t   samba_copyright_string());'
+new = '\t/* Android module: startup state is recorded by smbctl; omit routine banner. */'
+if new not in text:
+    if text.count(old) != 1:
+        raise SystemExit("Expected smbd startup banner was not found")
+    server.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+# RPC host and all workers have their own routine banner. Keep real diagnostics
+# and --version intact, just as for smbd above.
+for relative in ("source3/rpc_server/rpc_host.c",
+                 "source3/rpc_server/rpc_worker_internal.c"):
+    rpc = Path(sys.argv[1]) / relative
+    text = rpc.read_text(encoding="utf-8")
+    old = ('\tDBG_STARTUP_NOTICE("%s version %s started.\\n%s\\n",\n'
+           '\t\t\t   progname,\n'
+           '\t\t\t   samba_version_string(),\n'
+           '\t\t\t   samba_copyright_string());')
+    new = '\t/* Android module: omit routine RPC startup banner; retain diagnostics. */'
+    if new not in text:
+        if text.count(old) != 1:
+            raise SystemExit("Expected RPC startup banner was not found: " + relative)
+        rpc.write_text(text.replace(old, new, 1), encoding="utf-8")
 
 # Android has no /tmp. Preserve explicit caller paths and the non-Android
 # behavior; IPC$ already obtains its default path through Samba's tmpdir().
@@ -323,6 +397,16 @@ dump_new = ('#ifdef __ANDROID__\n' + dump_old.replace(
 ) + '\n#else\n' + dump_old + '\n#endif')
 apply_exact_patch("source3/smbd/smb1_process.c", dump_old, dump_new,
                   "SMB1 diagnostic packet dump directory")
+
+
+# Opt-in publisher framing precedes the retained pipe upload extension.
+import runpy
+_patch_argv = sys.argv
+try:
+    sys.argv = [str(Path(__file__).with_name('patch-publisher.py')), _patch_argv[1]]
+    runpy.run_path(sys.argv[0], run_name='__main__')
+finally:
+    sys.argv = _patch_argv
 
 # Native smbclient pipe-only transfer granularity; legacy callers stay unchanged.
 import runpy

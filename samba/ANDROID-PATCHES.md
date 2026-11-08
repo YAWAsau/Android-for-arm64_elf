@@ -2,18 +2,18 @@
 
 ## 目前版本
 
-最近實際建置的 Samba 為 **4.25.0**，使用 NDK r30（30.0.16248370）、ARM64／API 28、全靜態連結，預設 `-Os`／ThinLTO。2026-09-26 的建置記錄見外層 `verification/`。本次 2026-10-05 的新增補丁尚未重新編譯或進行裝置測試。
+本倉庫歷史二進位所用的 Samba 為 **4.25.0**，使用 NDK r30（30.0.16248370）、ARM64／API 28、全靜態連結，預設 `-Os`／ThinLTO。2026-09-26 的建置記錄見外層 `verification/`。本次 2026-10-05 的新增補丁尚未重新編譯或進行裝置測試。
 
-`build.ps1` 的 Samba 版本不是固定值：每次查詢官方最新穩定版並驗證來源簽章。只有查詢失敗時才警告並選用最新來源快取。其他工具與加密依賴的更新規則不受影響。
+2026-11-08 起來源配方固定 Samba 4.25.1／Nettle 4.0，保留簽章驗證及完整舊版封存。整合 publisher 的 stdin 回覆／owner pidfd，保留 runtime 路徑與 FIFO pipe-upload。備份版 24 個 baseline 檔案逐檔一致；完整重建及實機測試仍待裝置連線。
 
 ## 每次編譯都套用
 
 1. `build.ps1` 選取並驗證官方源碼。
-2. `build-samba.sh` 在 Waf 配置及編譯之前呼叫 `patch-samba.py`，來源快取也走相同流程。
+2. `build-samba.sh` 在 Waf 配置及編譯之前呼叫 `apply-patches.py`，先驗證來源雜湊，再執行 `patch-samba.py`，來源快取也走相同流程。
 3. 新增的路徑補丁要求來源區塊唯一且完整匹配；已套用時直接沿用。檔案移動或區塊變更就中止，需維護補丁後重跑。
-4. 成功建置後，`build-metadata.json` 記錄 `android_patchset = android-runtime-paths-v1` 及 `android_patch_recipe_sha256`。外層建置收集為 `out/samba-build.json`。
+4. 成功建置後，`build-metadata.json` 記錄 `android_patchset = android-4.25.1-publisher-pipe-runtime-v2` 及 `android_patch_recipe_sha256`。外層建置收集為 `out/samba-build.json`。
 
-這套流程可把補丁重複套用到可匹配的新版官方源碼；無法預先保證未來的上游結構或 API 永遠相容。更新來源版本不會自動改寫本地補丁。
+這套流程只接受審核過的 4.25.1 原始／套用後雜湊。更新上游時必須重新審核與更新 patch-manifest.json，不會默默跳過補丁。
 
 ## 本次移植
 

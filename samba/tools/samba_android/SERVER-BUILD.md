@@ -11,21 +11,18 @@ The old client packaging entry point forwards to this unified packager.
 ./build.ps1 -BuildScope client  # only smbclient, using the same build settings
 ```
 
-Every invocation queries the official Samba download page for the latest stable
-release; an unchanged release reuses verified cached sources and build outputs.
-If that query fails, the script warns and selects the newest cached source; it
-does not claim that cached version is current. It does not update in the background.
-The bundled Samba 4.25.0 source archive is a seed for the build cache,
-not a version pin for subsequent builds. NDK r30, API 28, GMP/Nettle/GnuTLS and
-Parse::Yapp remain pinned by build.ps1. Future upstream changes may require
-updating the Android patches; release discovery is not a guarantee of build success.
+The reviewed composition pins Samba 4.25.1, Nettle 4.0, GMP 6.3.0,
+GnuTLS 3.8.13 and Parse::Yapp 1.21. Complete upstream archives and signatures
+remain bundled, including the previous versions. Source drift is rejected by
+apply-patches.py before editing. Upgrading requires reviewing the hash manifest.
+The November 8 integration is source-only; no new runtime verification is claimed.
 
 Run `./build.ps1` in Windows PowerShell 5.1 or PowerShell 7. Keep the extracted
 directory structure intact. An authorized ARM64 Android device must be connected
 through ADB for configure probes. Compilation and linking happen on the PC only;
 no Termux is used. With several devices, pass `-DeviceSerial SERIAL`.
 
-The script discovers the latest official stable Samba version, verifies its
+The script selects pinned Samba 4.25.1, verifies its
 signature, builds static ARM64 executables with `-Os` / ThinLTO and publishes `dist/android-arm64-size/`:
 
 - `smbd`: SMB server, the executable required by the module.
@@ -37,7 +34,7 @@ The build only produces ELF binaries and build metadata. This kit contains no fl
 The server RPC helper directory is compiled as `/data/adb/modules/smbdwebui/bin` and its default log directory is `/data/adb/smbdwebui/runtime/log`. Your module must provide these paths or appropriate supported overrides. Replacing binaries alone does not update module shell scripts.
 
 The first run prepares MSYS2/NDK and source dependencies. Build cache lives at
-`%USERPROFILE%/SambaAndroidBuild`; the `work-r30-api28-ident-v1`, `deps/src-r30-api28`
+`%USERPROFILE%/SambaElf4251PublisherBuild`; the `work-r30-api28-ident-v1`, `deps/src-r30-api28`
 and `android-prefix-r30-api28` subdirectories isolate all target objects and
 static dependencies from earlier toolchains. No S: drive mapping is needed. Chinese paths
 are supported. `-Clean` rebuilds the selected source tree. An upstream release
@@ -95,7 +92,7 @@ Samba is GPLv3-or-later; the complete upstream source archive plus these patch
 scripts are needed to reproduce these modified binaries. Dependency licenses
 must also accompany redistribution.
 
-The installed NDK is reused from `%USERPROFILE%/SambaAndroidBuild/toolchain/android-ndk-r30`. Its exact revision is checked. If absent, the official Windows archive is downloaded and its pinned SHA1 is verified.
+The installed NDK is reused from `%USERPROFILE%/SambaElf4251PublisherBuild/toolchain/android-ndk-r30`. Its exact revision is checked. If absent, the official Windows archive is downloaded and its pinned SHA1 is verified.
 
 ## Static ELF identification with r30
 

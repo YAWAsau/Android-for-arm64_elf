@@ -3,7 +3,7 @@
   "script_kit_sha256": "c6a1a42739ea9f650b087973617ecdd206503c17d25bd34674cee20da830a5e0",
   "source_archive_kit": "samba-4.25.0-android-arm64-ndkr29-api28-logfix3-lto-build-kit.zip",
   "source_archive_kit_sha256": "f22b65fb2c20b2d096cf412cccbd171f9bdb3a59c349df002fd5f63c7e42d501",
-  "source_version": "4.25.0",
+  "source_version": "4.25.1",
   "copied_before_entry_point_integration_sha256": {
     "tools/samba_android/adb-runner.sh": "5958dddbeaa42f36b21fc61e7a70c7c87ec2d24c2a39e66c59cca798fb973928",
     "tools/samba_android/build-crypto.sh": "e5732dfd738c05f7e3229d40359c7c113996c4a645912aa29935ec8242a3dae7",
@@ -33,5 +33,19 @@
     "upstream-source/nettle-3.10.2.tar.gz.sig": "9cc1319ede378148f4c729ad889e3c0bd461d974ea590916f3480b93257a1d0b",
     "upstream-source/gnutls-3.8.13.tar.xz.sig": "fbe8e5a702febffba6df45bbcfc0e6f46300e68fb380b0757f3ad0c3544abada"
   },
-  "note": "r30 scripts from the final conversation kit; unchanged matching upstream source archives from the previous full kit. Prebuilt ELF files and historical outputs excluded."
+  "note": "r30 scripts from the final conversation kit; unchanged matching upstream source archives from the previous full kit. Prebuilt ELF files and historical outputs excluded.",
+  "integration": {
+    "date": "2026-11-08",
+    "publisher_source": "release1123/source/smb (v1095 recipe)",
+    "server_source": ".build/smb-publish-20261009/build",
+    "retained": [
+      "all existing upstream archives",
+      "Android runtime paths",
+      "pipe-upload chunk/window",
+      "all six static targets",
+      "r30 private stateless RNG"
+    ],
+    "nettle_version": "4.0",
+    "runtime_validation": "pending; no adb device connected"
+  }
 }

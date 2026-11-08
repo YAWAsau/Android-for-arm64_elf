@@ -1,0 +1,142 @@
+{
+  "samba_version": "4.25.1",
+  "archive_sha256": "7f367545bca69aa96897628f82f0f04d4b66b3bcb36cb978b9bb952c4b4c428d",
+  "files": {
+    "auth/credentials/credentials_krb5.c": {
+      "upstream": "7c1527ba8b66cfcd9caa3852c418be5e54fb9e42e3511cb293ed669413e64445",
+      "patched": "545efc2114884ed0561fba4ce86018d5b82a46592b6a55962df85d23f1bcbc08"
+    },
+    "buildtools/wafsamba/samba_install.py": {
+      "upstream": "863ea615020374f08b5293ef87b012c698338b18c0edd872d08efeb3fc38661c",
+      "patched": "24d3cf01a0fb4f326fde4bd4a861f6577a80b7529a211beb44a32f828eff9776"
+    },
+    "buildtools/wafsamba/wafsamba.py": {
+      "upstream": "9e61229f4a15460ec2cd4a064f767631e20930fc6187e849f6066c197a43c610",
+      "patched": "f20db2707bd86b3ea94e7411fdb3a312c481446652dc6a8c282fa1ed0462d1df"
+    },
+    "dynconfig/dynconfig.c": {
+      "upstream": "68d2f531499859c8b803583f1a0f3dbfabedb43bc814026526b2b292fc95fb1b",
+      "patched": "4ed119b7cf882e2df5ee274d6dd3345e6f99c29c9f8ea310ba9d93eca5ce0859"
+    },
+    "lib/replace/replace.c": {
+      "upstream": "8c346422525c636f465e07320f747dd9d9a47e659cc1fea3b7f5ab045b390b70",
+      "patched": "ab144d5865fc00b0c7bdc81f9e8f0c56a9f3595e4b068ad29e276f523103e94f"
+    },
+    "lib/replace/replace.h": {
+      "upstream": "61773e636870d71fb844238f6aa4482a74e5fa4513cbc1a412959c2851b8b037",
+      "patched": "5e11fdc03cfaf13b50730ce551ec52a1cd43ac0650497dc7b7aa05854e2d204f"
+    },
+    "lib/replace/system/filesys.h": {
+      "upstream": "05724a0b97e7f414c04974b05601bd6e536ddadde52110f57416b3d1e12ea7bf",
+      "patched": "50125a2144d4a071a3e02a745fc56c8e03991300b7f7a76e860b207fed6f3f58"
+    },
+    "lib/replace/wscript": {
+      "upstream": "76861cd57cb55a94be5c890e819b37a2cb091a33013c08ed7a47c02587cba71b",
+      "patched": "451d66de67417f3334f38de26868184e9cff8b8a375f8d6ea0744a32c52f451d"
+    },
+    "lib/socket/interfaces.c": {
+      "upstream": "0fe268f2406154cb0e3975215dd8df541cbd2ac107bf585ca0e2b44c0a272727",
+      "patched": "b21de2754172cdf52c977ef82bb159c55519edaa1f9d88549fafd19ff032041b"
+    },
+    "lib/util/overflow.h": {
+      "upstream": "289219d491ed199676ca4d5930276accbe931d29ee5a59a1f00b3f94f3658a7f",
+      "patched": "7784eb1c5866203f2cfd074c78b58f4e4036ca10de29e7cda9cfd6ae63abed21"
+    },
+    "lib/util/util.c": {
+      "upstream": "363067fddf0387852240e38381c11a3443b2399502e05695757f3b0351ace1ce",
+      "patched": "3219c668885b6fa5e840137c25f09f2155a4dade388c3bb7aaabdb25aa290e58"
+    },
+    "lib/util/util_pw.c": {
+      "upstream": "d31f902360d66a5934d791b97d4ce950e31ae039e065a022a3c7534e90900e17",
+      "patched": "9c254ff3dd2cdee8ab4f73bc90468354c81bec5cd2f5118cb5fb65146e6625e1"
+    },
+    "source3/client/client.c": {
+      "upstream": "8e5e50373ca58c8b069eeaa1db1b7fb97d4a7c9482384f42549ba21906973ca3",
+      "patched": "5c7cf786d15180c27d3d17b8c4a40acea93864af3a2ae5458e8a96e3ad0dfdb6"
+    },
+    "source3/lib/cleanupdb.c": {
+      "upstream": "f1d2db1bdb3f8d507704c8d978c14476c0c530a722aeea2369dcd9342862ac06",
+      "patched": "0ac2e72ff7278c032518314fdbf89f1a991f359e26e17512419969cccaca0c21"
+    },
+    "source3/lib/dumpcore.c": {
+      "upstream": "d4bf4b14b7baeaa17600f409da377143458b4154c988c46ab560bdb29c1177fd",
+      "patched": "2bfce4d438c6161b1a834f4ae4e15d98496dc353e8ecb81209b6462a60015137"
+    },
+    "source3/lib/gencache.c": {
+      "upstream": "32fc16a443ce7bbc36b3e81711e7c769ec66a24aac37a32add26787e6627eeeb",
+      "patched": "20bca8c1bf6dd1fc127d741f6c21014bc80fc31b760ce5ffeafc14d58be40e5f"
+    },
+    "source3/libsmb/clireadwrite.c": {
+      "upstream": "545f6f1186c7836d713ad9cdfa024dbae6ecf29c53fcb16296fa8af1a30817ae",
+      "patched": "4b38cb4c8993d9091ccfe16950595f0390d75e326ad1c0bb8db051cf332cb196"
+    },
+    "source3/libsmb/proto.h": {
+      "upstream": "cb3e6206814265dc0c936608010ec8a2a1ad53b5193151faa37cf84b350d0d68",
+      "patched": "4c9b148aa88d21799789cbb7b5973f87e37fe07c7db8b94768fa562e6165cd12"
+    },
+    "source3/profile/profile.c": {
+      "upstream": "b8b69f470a9d98662e725acebbed3aa20be970c4c5c7a891c304ca91a93bfaf6",
+      "patched": "250d1872b73f22a4da43148de469611914715a3eca10110b23e6d105cccb682a"
+    },
+    "source3/rpc_server/rpc_host.c": {
+      "upstream": "b37e80c41845f949aa47b5bfe5250ad923bafc50230192c6f04bd29f9069dbd4",
+      "patched": "c61fc8371cf8f2985de5d19da715346af113e6b36716ea0da068dc2d7356ac1e"
+    },
+    "source3/rpc_server/rpc_worker_internal.c": {
+      "upstream": "382fdba930f93011b5b8b5cc3e0efc0a5ca7fd7fcd9cac42480c2c49cc7339dc",
+      "patched": "ee8f25d0cc5ef57d65a46afe9e22e1494b67498515b20a9bdf6d55368d5ec189"
+    },
+    "source3/rpc_server/wscript_build": {
+      "upstream": "cb2017fde2e1f377071e58120a03c532ab9587055eb707b913133810d82d9af8",
+      "patched": "8abef3c6f4759fdcd7581bae06c2887ad92717d6fd18ff51a7f734bff4402b10"
+    },
+    "source3/smbd/server.c": {
+      "upstream": "0a9653f98bcf30fdab40aba69c14deb0fd6958ac024e658a5d52b2623473635c",
+      "patched": "940739458d2adb8f4d95d0c2777caa6e235c7d2e8dac45799087dbc1bcc97e9a"
+    },
+    "source3/smbd/smb1_process.c": {
+      "upstream": "d432f61618b32424edd53df41a95a00097940cd7b9bf8b0b3f1df3495de3271b",
+      "patched": "02afdd706e4628bfc5a3881e3fd0c6a965c75f1873e1a0790de3fd56cdccb915"
+    },
+    "source3/utils/smb_prometheus_endpoint.c": {
+      "upstream": "ff4229c9f08778259d94b52f536daab387688abfed7fa8e6b3e01f3b48b7017a",
+      "patched": "ffe9d3ac26c13ea8e92b48e7f8dc7456073781e60c73747f225f8c5d0b724dad"
+    },
+    "source3/wscript": {
+      "upstream": "f0fb02893506422aa630b4818499d002dc48a7c183ee9e4c0824435fb25268c5",
+      "patched": "9e2eba4717abf730c7022841664c004a2a9218de947d904028ba65ec93e2dd9e"
+    },
+    "source3/wscript_build": {
+      "upstream": "990880192f12e89075728060ae5f839c3fc392ae130255651003dd3a8d4a6504",
+      "patched": "ffe7180fb3efc3dd6e1fcc9bc9982336be3d1a62921ec181996fe229f3a56386"
+    },
+    "third_party/heimdal/lib/base/expand_path.c": {
+      "upstream": "0b7402121e7c88e57681395fbe04d3972537bc87f2050540a39d031423a17924",
+      "patched": "60f69d759532cb8e07b24ec9fd562e4ac8347e997185368ad6499e7191f101a3"
+    },
+    "third_party/heimdal/lib/roken/getauxval.c": {
+      "upstream": "aeadc7166c95c68fc30a668569de51e867c54ad6721b96d978492f653da89319",
+      "patched": "b22d2c9fe76bbf1737c30912bff06cdcc5f51c524f6cb7a5c3d3cede1afafb43"
+    },
+    "third_party/heimdal/lib/roken/getauxval.h": {
+      "upstream": "4f2b231274a38816bd7f606fd74778c4e0a7b69ce1a377b7a22de8958e4d79d1",
+      "patched": "b4d2fbd441a5d07e818dfeaa73e117f269e8f8d44cddae5e91c03e7c5ef3d2ec"
+    },
+    "third_party/heimdal/lib/roken/issuid.c": {
+      "upstream": "a97916dddc76176163672a866c0775ee029577b29495ff9dc6336c04dade89c4",
+      "patched": "45a85dbbeda0f83e3a1ecb1f057684b60969197252d92728241bb5475640bf30"
+    },
+    "third_party/heimdal/lib/roken/roken.h.in": {
+      "upstream": "6622998a843d26ad9bbe62baf9fd976697957c4c0e3a1cf7a15700c4b3a6d4e0",
+      "patched": "79f201680b41323fc94d726142939d7504b5b8e661abca07a3777708b72ed24a"
+    },
+    "third_party/waf/waflib/extras/gccdeps.py": {
+      "upstream": "eb483273db8b68dceab51a32d0b8bc039444d162a85f9fc190fc8f901ae77b90",
+      "patched": "1e26346ce513cb1545452a83209814794d2a7ab3b36d04bc3d37c17ccb72d77a"
+    },
+    "third_party/heimdal_build/roken.h": {
+      "upstream": "efa2f713686dddd42ff6beaa6ac5c08e06ec8cff90eec4a94ba7483bb0b2b6a1",
+      "patched": "efa2f713686dddd42ff6beaa6ac5c08e06ec8cff90eec4a94ba7483bb0b2b6a1"
+    }
+  }
+}

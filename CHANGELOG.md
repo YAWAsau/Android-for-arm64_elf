@@ -1,3 +1,9 @@
+## 2026-11-08：Samba 4.25.1／publisher 來源整合
+
+- 固定 Samba 4.25.1、Nettle 4.0；保留全部新舊上游封存與簽章。
+- 整合 publisher 命令回覆／owner pidfd、24 檔 Android baseline、RPC／HOSTCC 修正；保留 runtime 路徑、FIFO pipe-upload、六目標及 r30 相容。
+- 增加整套補丁雜湊守衛與乾淨／重複／漂移測試；尚未完整編譯及實機測試，舊 ELF 不變。
+
 ## 2026-11-08
 
 - 同步通知中適用的 repository／完整來源清單驗證區分，完整上游來源繼續保留。

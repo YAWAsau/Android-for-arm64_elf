@@ -17,10 +17,14 @@ export ANDROID_AR="$NDK_BIN/llvm-ar.exe"
 export ANDROID_RANLIB="$NDK_BIN/llvm-ranlib.exe"
 export ANDROID_STRIP="$NDK_BIN/llvm-strip.exe"
 export ANDROID_SYSROOT="$SAMBA_NDK/toolchains/llvm/prebuilt/windows-x86_64/sysroot"
-export CC="bash $SAMBA_REPO/tools/samba_android/clang-wrapper.sh"
-export AR="bash $SAMBA_REPO/tools/samba_android/llvm-tool-wrapper.sh ar"
-export RANLIB="bash $SAMBA_REPO/tools/samba_android/llvm-tool-wrapper.sh ranlib"
-export STRIP="bash $SAMBA_REPO/tools/samba_android/llvm-tool-wrapper.sh strip"
+# Waf parses these command strings with shlex.split; quote each argv token.
+waf_command() {
+  python3 -c 'import shlex,sys; print(shlex.join(sys.argv[1:]))' "$@"
+}
+export CC="$(waf_command bash "$SAMBA_REPO/tools/samba_android/clang-wrapper.sh")"
+export AR="$(waf_command bash "$SAMBA_REPO/tools/samba_android/llvm-tool-wrapper.sh" ar)"
+export RANLIB="$(waf_command bash "$SAMBA_REPO/tools/samba_android/llvm-tool-wrapper.sh" ranlib)"
+export STRIP="$(waf_command bash "$SAMBA_REPO/tools/samba_android/llvm-tool-wrapper.sh" strip)"
 export CFLAGS='-O2 -fPIE'
 export LDFLAGS='-pie'
 profile=${SAMBA_BUILD_PROFILE:-standard}
@@ -34,7 +38,7 @@ if [ "${SAMBA_BUILD_SCOPE:-all}" = client ]; then
   targets=client/smbclient,compile_et,asn1_compile
   server_targets=''
 fi
-export PKG_CONFIG="bash $SAMBA_REPO/tools/samba_android/pkg-config-static.sh"
+export PKG_CONFIG="$(waf_command bash "$SAMBA_REPO/tools/samba_android/pkg-config-static.sh")"
 export PKG_CONFIG_PATH="$SAMBA_PREFIX/lib/pkgconfig"
 export PKG_CONFIG_LIBDIR="$SAMBA_PREFIX/lib/pkgconfig"
 unset PKG_CONFIG_SYSROOT_DIR
@@ -71,16 +75,16 @@ EOF
 
 # Reapply the Android recipe on every build, including cached source trees.
 # A missing runtime-path patch anchor is fatal under set -e, before Waf runs.
-python3 "$SAMBA_REPO/tools/samba_android/patch-samba.py" "$SAMBA_BUILD_ROOT"
+python3 "$SAMBA_REPO/tools/samba_android/apply-patches.py" "$SAMBA_BUILD_ROOT"
 
 # Waf caches absolute compiler-wrapper paths. Moving a source kit must not
 # silently keep using the wrapper from a different checkout.
-recipe_key=$(printf '%s\n' "$SAMBA_REPO" "$SAMBA_NDK" "$profile"; sha256sum "$SAMBA_REPO/tools/samba_android/clang-wrapper.sh" "$SAMBA_REPO/tools/samba_android/arc4random_kernel.c")
+recipe_key=$(printf '%s\n' "$SAMBA_REPO" "$SAMBA_NDK" "$profile"; sha256sum "$SAMBA_REPO/tools/samba_android/clang-wrapper.sh" "$SAMBA_REPO/tools/samba_android/arc4random_kernel.c" "$SAMBA_REPO/tools/samba_android/prepare_compat_libc.py" "$SAMBA_REPO/tools/samba_android/patch-samba.py" "$SAMBA_REPO/tools/samba_android/patch-publisher.py" "$SAMBA_REPO/tools/samba_android/patch-pipe-upload.py" "$SAMBA_REPO/tools/samba_android/apply-patches.py" "$SAMBA_REPO/tools/samba_android/patch-manifest.json")
 if [ ! -f bin/.android-samba-server-configured ] || [ "$(cat bin/.android-samba-server-configured)" != "$recipe_key" ]; then
   ./configure \
     --cross-compile \
-    --hostcc="bash $SAMBA_REPO/tools/samba_android/hostcc-wrapper.sh" \
-    --cross-execute="bash $SAMBA_REPO/tools/samba_android/adb-runner.sh $SAMBA_ADB $SAMBA_DEVICE" \
+    --hostcc="$(waf_command bash "$SAMBA_REPO/tools/samba_android/hostcc-wrapper.sh")" \
+    --cross-execute="$(waf_command bash "$SAMBA_REPO/tools/samba_android/adb-runner.sh" "$SAMBA_ADB" "$SAMBA_DEVICE")" \
     --cross-answers="$SAMBA_ANSWERS" \
     --without-ad-dc --without-ads --without-ldap --without-winbind \
     --without-ldb-lmdb \
@@ -146,7 +150,9 @@ printf '%s\n%s\n' "$elf_program_headers" "$elf_dynamic" > "$SAMBA_OUT/elf-static
 
 SMBCLIENT_WIN=$(cygpath -w "$SMBCLIENT")
 export MSYS2_ARG_CONV_EXCL='*'
+(
+trap 'MSYS_NO_PATHCONV=1 "$SAMBA_ADB" -s "$SAMBA_DEVICE" shell rm -f /data/local/tmp/smbclient-codex-test >/dev/null 2>&1 || true' EXIT
 MSYS_NO_PATHCONV=1 "$SAMBA_ADB" -s "$SAMBA_DEVICE" push "$SMBCLIENT_WIN" /data/local/tmp/smbclient-codex-test >/dev/null
 MSYS_NO_PATHCONV=1 "$SAMBA_ADB" -s "$SAMBA_DEVICE" shell chmod 755 /data/local/tmp/smbclient-codex-test
 MSYS_NO_PATHCONV=1 "$SAMBA_ADB" -s "$SAMBA_DEVICE" shell /data/local/tmp/smbclient-codex-test --version
-MSYS_NO_PATHCONV=1 "$SAMBA_ADB" -s "$SAMBA_DEVICE" shell rm -f /data/local/tmp/smbclient-codex-test
+)

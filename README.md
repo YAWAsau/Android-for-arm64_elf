@@ -131,7 +131,7 @@ tar／zstd 每次都重新編譯；BusyBox 依配置及補丁雜湊管理快取�
 - zstd 固定提交 `01b7154f1172432f8abe9b3bb9909e14a1176b7d`，來源標頭版本為 1.6.0；檔案 SHA 在 `zstd/upstream_source_sha256.json`。
 - tar 固定 GNU 1.35.90 測試版，原始壓縮包 SHA 與來源清單在 `tar/SOURCE_MANIFEST.json`。
 - BusyBox 固定 1.38.0，包含最後的 Unicode 修正版；來源壓縮包 SHA 固定在 `busybox/build.py`。
-- Samba 採對話最後的 `samba-android-arm64-ndkr30-api28-build-scripts.zip`。腳本仍會查詢官方最新穩定版；查詢失敗時，明確警告並採用最新快取版本。本包附上 4.25.0 及相同版本的加密依賴來源，首次先放入建置快取，仍執行原有簽章檢查。
+- Samba 固定 4.25.1／Nettle 4.0，整合 publisher、保留既有 Android patch、FIFO 上傳與完整新舊上游來源。簽章及逐檔 patch 雜湊驗證保留。2026-11-08 僅完成來源整合，尚未重建或實機測試。
 
 前三個專案不會自動升級版本。Samba 自動查詢上游版本的行為沿用原建置包，未來的上游變更可能需要更新 Android 補丁；不保證任何未來版本直接建置成功。
 

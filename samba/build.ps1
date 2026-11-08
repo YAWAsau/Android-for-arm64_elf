@@ -1,7 +1,7 @@
 param(
     [string]$Ndk,
     [string]$Msys = 'C:\msys64',
-    [string]$CacheRoot = "$env:USERPROFILE\SambaAndroidBuild",
+    [string]$CacheRoot = "$env:USERPROFILE\SambaElf4251PublisherBuild",
     [ValidateRange(1,128)][int]$Jobs = 8,
     [string]$Adb = 'C:\platform-tools\adb.exe',
     [string]$Gpg = 'C:\Program Files\Git\usr\bin\gpg.exe',
@@ -55,6 +55,15 @@ $PerlDependencyArchive = Join-Path $DepsRoot 'Parse-Yapp-1.21.tar.gz'
 $PerlDependencyRoot = Join-Path $DepsRoot 'perl'
 $PerlYappLib = Join-Path $PerlDependencyRoot 'Parse-Yapp-1.21\lib'
 $Prefix = Join-Path $Cache 'android-prefix-r30-api28'
+# Existing custom caches must not silently keep the previous Nettle ABI.
+# Do not delete user-selected caches; a new cache root rebuilds all crypto.
+if (Test-Path -LiteralPath (Join-Path $Prefix 'lib/libnettle.a')) {
+    $NettlePc = Join-Path $Prefix 'lib/pkgconfig/nettle.pc'
+    if (-not (Test-Path -LiteralPath $NettlePc) -or
+        [IO.File]::ReadAllText($NettlePc) -notmatch '(?m)^Version:\s*4\.0\s*$') {
+        throw 'Cached Nettle is not 4.0. Use a fresh -CacheRoot to rebuild all crypto dependencies.'
+    }
+}
 $OutDir = Join-Path $Repo 'dist\android-arm64'
 if ($BuildProfile -eq 'size') {
     $Work = Join-Path $Cache 'work-r30-api28-size-ident-v1'
@@ -122,7 +131,7 @@ if ($Clean) { Remove-SambaBuildDirectory $Work; New-Item -ItemType Directory -Fo
 # Seed the existing verified-download cache from the bundled source archives.
 $BundledSource = Join-Path $Repo 'upstream-source'
 $BundledDependencies = @('gmp-6.3.0.tar.xz','gmp-6.3.0.tar.xz.sig',
-    'nettle-3.10.2.tar.gz','nettle-3.10.2.tar.gz.sig',
+    'nettle-4.0.tar.gz','nettle-4.0.tar.gz.sig',
     'gnutls-3.8.13.tar.xz','gnutls-3.8.13.tar.xz.sig','Parse-Yapp-1.21.tar.gz')
 foreach ($SourceFile in Get-ChildItem -LiteralPath $BundledSource -File) {
     if ($SourceFile.Name -match '^samba-([0-9]+\.[0-9]+\.[0-9]+\.tar\.(gz|asc)|pubkey\.asc)$') {
@@ -194,21 +203,9 @@ if ($NdkProperties -notmatch 'Pkg.Revision\s*=\s*30\.0\.16248370') {
     throw 'The selected NDK is not the pinned r30 release (30.0.16248370).'
 }
 
-Write-Host '[3/6] Discovering the newest official Samba stable release...'
-try {
-    $Page = (Invoke-WebRequest -UseBasicParsing 'https://www.samba.org/samba/download/' -TimeoutSec 12).Content
-    $Match = [regex]::Match($Page,'Samba\s+([0-9]+\.[0-9]+\.[0-9]+)\s*\(gzipped\)')
-    if (-not $Match.Success) { throw 'Release page did not contain a stable version.' }
-    $Version = $Match.Groups[1].Value
-} catch {
-    Write-Warning "Could not reach Samba release page; using the newest cached source: $($_.Exception.Message)"
-    $CachedVersions = @(
-        Get-ChildItem -LiteralPath $Cache -File -Filter 'samba-*.tar.gz' -ErrorAction SilentlyContinue
-        Get-ChildItem -LiteralPath (Join-Path $Repo '.build') -File -Filter 'samba-*.tar.gz' -ErrorAction SilentlyContinue
-    ) | ForEach-Object { if ($_.Name -match '^samba-([0-9]+\.[0-9]+\.[0-9]+)\.tar\.gz$') { [version]$Matches[1] } }
-    if (-not $CachedVersions) { throw 'No Samba stable version found online or in cache.' }
-    $Version = ($CachedVersions | Sort-Object -Descending | Select-Object -First 1).ToString()
-}
+# Publisher patch is reviewed against this exact upstream version.
+$Version = '4.25.1'
+Write-Host '[3/6] Using bundled pinned Samba 4.25.1 source...'
 $TarGz = Join-Path $Cache "samba-$Version.tar.gz"
 $Tar = Join-Path $Cache "samba-$Version.tar"
 $Sig = "$Tar.asc"
@@ -272,7 +269,7 @@ foreach ($ExpectedFingerprint in $DependencyFingerprints) {
 }
 $Dependencies = @(
     @{ Name='gmp-6.3.0'; Archive='gmp-6.3.0.tar.xz'; Url='https://gmplib.org/download/gmp/gmp-6.3.0.tar.xz'; SigUrl='https://gmplib.org/download/gmp/gmp-6.3.0.tar.xz.sig'; Fingerprints=@('343C2FF0FBEE5EC2EDBEF399F3599FF828C67298'); Key='343C2FF0FBEE5EC2EDBEF399F3599FF828C67298' },
-    @{ Name='nettle-3.10.2'; Archive='nettle-3.10.2.tar.gz'; Url='https://ftp.gnu.org/gnu/nettle/nettle-3.10.2.tar.gz'; SigUrl='https://ftp.gnu.org/gnu/nettle/nettle-3.10.2.tar.gz.sig'; Fingerprints=@('343C2FF0FBEE5EC2EDBEF399F3599FF828C67298'); Key='343C2FF0FBEE5EC2EDBEF399F3599FF828C67298' },
+    @{ Name='nettle-4.0'; Archive='nettle-4.0.tar.gz'; Url='https://ftp.gnu.org/gnu/nettle/nettle-4.0.tar.gz'; SigUrl='https://ftp.gnu.org/gnu/nettle/nettle-4.0.tar.gz.sig'; Fingerprints=@('343C2FF0FBEE5EC2EDBEF399F3599FF828C67298'); Key='343C2FF0FBEE5EC2EDBEF399F3599FF828C67298' },
     @{ Name='gnutls-3.8.13'; Archive='gnutls-3.8.13.tar.xz'; Url='https://www.gnupg.org/ftp/gcrypt/gnutls/v3.8/gnutls-3.8.13.tar.xz'; SigUrl='https://www.gnupg.org/ftp/gcrypt/gnutls/v3.8/gnutls-3.8.13.tar.xz.sig'; Fingerprints=@('5D46CB0F763405A7053556F47A75A648B3F9220C','E987AB7F7E89667776D05B3BB0E9DD20B29F1432'); Key='5D46CB0F763405A7053556F47A75A648B3F9220C' }
 )
 foreach ($Dependency in $Dependencies) {
@@ -378,9 +375,13 @@ $CrtScriptPosix = (ConvertTo-MsysPath (Join-Path $Repo 'tools\samba_android\prep
 $Command = "set -e; $EnvPrefix; python3 '$CrtScriptPosix'; bash '$CryptoPosix'; bash '$ShellScriptPosix'"
 Invoke-Checked $MsysBash @('-lc',$Command)
 $BuildMetadata = @{ ndk = 'r30'; ndk_revision = '30.0.16248370'; android_api = 28; target = 'aarch64-linux-android28'; samba_version = $Version; build_profile = $BuildProfile; build_scope = $BuildScope }
+$BuildMetadata.crypto_versions = @{ gmp = '6.3.0'; nettle = '4.0'; gnutls = '3.8.13' }
 $BuildMetadata.android_ident = 'target-api28-ndkr30; private CRT note override; stateless arc4random compatibility'
-$BuildMetadata.android_patchset = 'android-runtime-paths-v1'
+$BuildMetadata.android_patchset = 'android-4.25.1-publisher-pipe-runtime-v2'
 $BuildMetadata.android_patch_recipe_sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $Repo 'tools\samba_android\patch-samba.py')).Hash.ToLowerInvariant()
+$BuildMetadata.publisher_patch_sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $Repo 'tools\samba_android\patch-publisher.py')).Hash.ToLowerInvariant()
+$BuildMetadata.patch_manifest_sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $Repo 'tools\samba_android\patch-manifest.json')).Hash.ToLowerInvariant()
+$BuildMetadata.pipe_upload_patch_sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $Repo 'tools\samba_android\patch-pipe-upload.py')).Hash.ToLowerInvariant()
 if ($BuildProfile -eq 'size') {
     $BuildMetadata.samba_cflags = '-Os -fPIE -ffunction-sections -fdata-sections -flto=thin'
     $BuildMetadata.crypto_cflags = '-O2 -fPIC'
